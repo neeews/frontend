@@ -1,15 +1,29 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { authApi, tokenStorage } from '../api/auth'
 import '../styles/auth.css'
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
-  const submit = e => {
+
+  const submit = async e => {
     e.preventDefault()
-    // TODO: 로그인 로직 연결
-    alert(`로그인 시도: ${form.email}`)
+    setError('')
+    setLoading(true)
+    try {
+      const data = await authApi.login(form.email, form.password)
+      tokenStorage.save(data)
+      navigate('/')
+    } catch (err) {
+      setError('이메일 또는 비밀번호가 올바르지 않습니다.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -45,8 +59,9 @@ export default function LoginPage() {
               required
             />
           </div>
-          <button type="submit" className="btn-submit">
-            로그인
+          {error && <p className="auth-error">{error}</p>}
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? '로그인 중...' : '로그인'}
           </button>
         </form>
 
