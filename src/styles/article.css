@@ -1,0 +1,242 @@
+/* ── Page layout ── */
+.article-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* ── Top nav ── */
+.article-top-nav {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.article-top-nav-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s;
+}
+
+.back-btn:hover { color: #0f172a; }
+
+.nav-logo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #6366f1;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+/* ── Article container ── */
+.article-container {
+  max-width: 800px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.article-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+}
+
+.article-hero-img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 28px;
+  display: block;
+}
+
+.article-hero-placeholder {
+  width: 100%;
+  height: 320px;
+  border-radius: 16px;
+  margin-bottom: 28px;
+  background: linear-gradient(135deg, #c7d2fe 0%, #ddd6fe 100%);
+}
+
+.article-body {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #1e293b;
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+}
+
+.article-body p { margin-bottom: 16px; }
+.article-body p:last-child { margin-bottom: 0; }
+
+/* ── Actions ── */
+.article-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.action-btn:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.action-btn.bookmark-btn.active {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: #fff;
+}
+
+.action-btn.share-btn.copied {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+/* ── Related articles ── */
+.related-section {
+  max-width: 800px;
+  margin: 0 auto 48px;
+  padding: 0 24px;
+}
+
+.related-section h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.related-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: box-shadow 0.15s, transform 0.12s;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.related-item:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.related-item-body { flex: 1; }
+
+.related-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+/* ── States ── */
+.page-loading,
+.page-error {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* ── Category / source badges (shared) ── */
+.cat-badge {
+  border-radius: 5px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cat-badge.small {
+  font-size: 11px;
+  padding: 2px 6px;
+}
+
+.article-time {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.article-source {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.article-byline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .article-container,
+  .related-section {
+    padding: 0 16px;
+  }
+  .article-title { font-size: 22px; }
+  .article-body { padding: 20px; font-size: 16px; }
+}
