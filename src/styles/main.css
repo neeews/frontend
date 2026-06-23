@@ -106,6 +106,80 @@
 
 .header-login-btn:hover { opacity: 0.85; }
 
+/* ── Header search ── */
+.header-search-form {
+  display: flex;
+}
+
+.header-search-input {
+  height: 36px;
+  padding: 0 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  width: 160px;
+  transition: border-color 0.15s, width 0.2s;
+}
+
+.header-search-input:focus {
+  border-color: #6366f1;
+  width: 200px;
+}
+
+.header-search-input::placeholder { color: #94a3b8; }
+
+/* ── Header user menu ── */
+.header-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-mypage-btn {
+  padding: 8px 16px;
+  background: transparent;
+  color: #6366f1;
+  border: 2px solid #6366f1;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.header-mypage-btn:hover {
+  background: #6366f1;
+  color: #fff;
+}
+
+.header-logout-btn {
+  padding: 8px 16px;
+  background: transparent;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.header-logout-btn:hover {
+  border-color: #64748b;
+  color: #0f172a;
+}
+
+/* ── Hot loading / empty ── */
+.hot-loading,
+.hot-empty {
+  padding: 60px 0;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
 /* ── Ticker ── */
 .ticker-bar {
   background: #6366f1;
