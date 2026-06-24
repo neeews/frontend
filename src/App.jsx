@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import MainPage from './pages/MainPage'
@@ -6,11 +6,7 @@ import ArticleDetailPage from './pages/ArticleDetailPage'
 import CategoryPage from './pages/CategoryPage'
 import SearchPage from './pages/SearchPage'
 import MyPage from './pages/MyPage'
-import { tokenStorage } from './api/auth'
-
-function ProtectedRoute({ children }) {
-  return tokenStorage.getAccess() ? children : <Navigate to="/login" replace />
-}
+import PrivateRoute from './components/PrivateRoute'
 
 function App() {
   return (
@@ -22,7 +18,7 @@ function App() {
         <Route path="/articles/:id" element={<ArticleDetailPage />} />
         <Route path="/category/:name" element={<CategoryPage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
+        <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   )

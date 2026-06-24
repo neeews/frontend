@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { authApi, tokenStorage } from '../api/auth'
+import { authApi } from '../api/auth'
+import { useAuth } from '../context/AuthContext'
 import '../styles/auth.css'
 
 export default function LoginPage() {
@@ -8,6 +9,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -17,7 +19,7 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const data = await authApi.login(form.email, form.password)
-      tokenStorage.save(data)
+      login(data)
       navigate('/')
     } catch (err) {
       setError(err.message || '이메일 또는 비밀번호가 올바르지 않습니다.')

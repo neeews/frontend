@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
-import { tokenStorage } from '../api/auth'
+import { useAuth } from '../context/AuthContext'
 
 export function useBookmark(articleId, initialState = false) {
   const [isBookmarked, setIsBookmarked] = useState(initialState)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { isLoggedIn } = useAuth()
 
   useEffect(() => {
     setIsBookmarked(initialState)
   }, [initialState])
 
   const toggle = async () => {
-    if (!tokenStorage.getAccess()) {
+    if (!isLoggedIn) {
       navigate('/login')
       return
     }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
-import { authApi, tokenStorage } from '../api/auth'
+import { useAuth } from '../context/AuthContext'
 import { timeAgo } from '../utils/time'
 import '../styles/main.css'
 
@@ -19,7 +19,7 @@ const categoryColor = {
 
 export default function MainPage() {
   const navigate = useNavigate()
-  const isLoggedIn = Boolean(tokenStorage.getAccess())
+  const { isLoggedIn, logout } = useAuth()
 
   const [activeCategory, setActiveCategory] = useState('전체')
   const [searchInput, setSearchInput] = useState('')
@@ -65,9 +65,8 @@ export default function MainPage() {
   }
 
   const handleLogout = async () => {
-    try { await authApi.logout(tokenStorage.getRefresh()) } catch {}
-    tokenStorage.clear()
-    window.location.reload()
+    await logout()
+    navigate('/')
   }
 
   const tickerText = breakingNews.length > 0

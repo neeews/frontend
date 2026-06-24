@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { authApi, tokenStorage } from '../api/auth'
+import { authApi } from '../api/auth'
+import { useAuth } from '../context/AuthContext'
 import '../styles/auth.css'
 
 const VERIFY_DURATION = 180
@@ -22,6 +23,7 @@ export default function SignupPage() {
   const [codeError, setCodeError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -85,7 +87,7 @@ export default function SignupPage() {
     setLoading(true)
     try {
       const data = await authApi.signup(form.name, form.email, form.password)
-      tokenStorage.save(data)
+      login(data)
       navigate('/')
     } catch (err) {
       setError(err.message || '회원가입에 실패했습니다. 다시 시도해주세요.')

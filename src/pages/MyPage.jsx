@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
-import { authApi, tokenStorage } from '../api/auth'
+import { useAuth } from '../context/AuthContext'
 import { timeAgo } from '../utils/time'
 import '../styles/mypage.css'
 
@@ -17,25 +17,21 @@ const categoryColor = {
 
 export default function MyPage() {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const { user: ctxUser, logout } = useAuth()
+  const [user, setUser] = useState(ctxUser)
   const [bookmarks, setBookmarks] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(!ctxUser)
 
   useEffect(() => {
-    // 로그인 시 저장해둔 유저 정보를 즉시 표시
-    const cached = tokenStorage.getUser()
-    if (cached) {
-      setUser(cached)
-      setIsLoading(false)
+    // Context에 유저가 없으면 API로 가져옴
+    if (!ctxUser) {
+      articlesApi.getMe()
+        .then(setUser)
+        .catch(() => {})
+        .finally(() => setIsLoading(false))
     }
 
-    // 서버에서 최신 유저 정보 갱신
-    authApi.getMe()
-      .then(data => setUser(data))
-      .catch(() => {})
-      .finally(() => setIsLoading(false))
-
-    // 북마크 목록 (백엔드 미구현 시 빈 배열로 유지)
+    // 북마크 목록 (백엔드 미구현 시 빈 배열 유지)
     articlesApi.getMyBookmarks()
       .then(data => {
         const list = Array.isArray(data)
@@ -44,13 +40,10 @@ export default function MyPage() {
         setBookmarks(list)
       })
       .catch(() => {})
-  }, [])
+  }, [ctxUser])
 
-  const logout = async () => {
-    try {
-      await authApi.logout(tokenStorage.getRefresh())
-    } catch {}
-    tokenStorage.clear()
+  const handleLogout = async () => {
+    await logout()
     navigate('/')
   }
 
@@ -59,7 +52,7 @@ export default function MyPage() {
     try {
       await articlesApi.deleteMe()
     } catch {}
-    tokenStorage.clear()
+    await logout()
     navigate('/')
   }
 
@@ -125,7 +118,7 @@ export default function MyPage() {
         </section>
 
         <div className="mypage-actions">
-          <button className="btn-logout" onClick={logout}>로그아웃</button>
+          <button className="btn-logout" onClick={handleLogout}>로그아웃</button>
           <button className="btn-delete-account" onClick={deleteAccount}>회원 탈퇴</button>
         </div>
       </div>
