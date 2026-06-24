@@ -7,16 +7,16 @@ async function request(path, options = {}) {
   })
   if (!res.ok) {
     const text = await res.text()
-    throw new Error(text || res.statusText)
+    let message = res.statusText
+    if (text) {
+      try { message = JSON.parse(text).message ?? message } catch { message = text }
+    }
+    throw new Error(message)
   }
   if (res.status === 204) return null
   const text = await res.text()
   if (!text) return null
-  try {
-    return JSON.parse(text)
-  } catch {
-    return null
-  }
+  try { return JSON.parse(text) } catch { return null }
 }
 
 export const authApi = {
@@ -38,19 +38,29 @@ export const authApi = {
   refresh: (refreshToken) =>
     request('/auth/token/refresh', { method: 'POST', body: JSON.stringify({ refreshToken }) }),
 
-  getMe: (accessToken) =>
-    request('/auth/me', { headers: { Authorization: `Bearer ${accessToken}` } }),
+  getMe: () =>
+    request('/auth/me', {
+      headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+    }),
 }
 
 export const tokenStorage = {
-  save: ({ accessToken, refreshToken }) => {
+  save: ({ accessToken, refreshToken, user }) => {
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('refreshToken', refreshToken)
+    if (user) localStorage.setItem('user', JSON.stringify(user))
+  },
+  getAccess: () => localStorage.getItem('accessToken'),
+  getRefresh: () => localStorage.getItem('refreshToken'),
+  getUser: () => {
+    try {
+      const u = localStorage.getItem('user')
+      return u ? JSON.parse(u) : null
+    } catch { return null }
   },
   clear: () => {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    localStorage.removeItem('user')
   },
-  getAccess: () => localStorage.getItem('accessToken'),
-  getRefresh: () => localStorage.getItem('refreshToken'),
 }

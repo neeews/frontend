@@ -36,6 +36,6 @@ export const articlesApi = {
   addBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'POST' }),
   removeBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'DELETE' }),
   getMyBookmarks: () => request('/users/me/bookmarks'),
-  getMe: () => request('/users/me'),
+  getMe: () => request('/auth/me'),
   deleteMe: () => request('/users/me', { method: 'DELETE' }),
 }

@@ -22,19 +22,28 @@ export default function MyPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([
-      articlesApi.getMe(),
-      articlesApi.getMyBookmarks(),
-    ])
-      .then(([userData, bookmarkData]) => {
-        setUser(userData?.user ?? userData)
-        const list = Array.isArray(bookmarkData)
-          ? bookmarkData
-          : (bookmarkData?.articles ?? bookmarkData?.bookmarks ?? [])
+    // 로그인 시 저장해둔 유저 정보를 즉시 표시
+    const cached = tokenStorage.getUser()
+    if (cached) {
+      setUser(cached)
+      setIsLoading(false)
+    }
+
+    // 서버에서 최신 유저 정보 갱신
+    authApi.getMe()
+      .then(data => setUser(data))
+      .catch(() => {})
+      .finally(() => setIsLoading(false))
+
+    // 북마크 목록 (백엔드 미구현 시 빈 배열로 유지)
+    articlesApi.getMyBookmarks()
+      .then(data => {
+        const list = Array.isArray(data)
+          ? data
+          : (data?.articles ?? data?.bookmarks ?? [])
         setBookmarks(list)
       })
       .catch(() => {})
-      .finally(() => setIsLoading(false))
   }, [])
 
   const logout = async () => {
