@@ -1,12 +1,12 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "http://ssh.gsmsv.site:31384/:path*"
+      "src": "/api/(.*)",
+      "dest": "http://ssh.gsmsv.site:31384/$1"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
