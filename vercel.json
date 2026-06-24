@@ -5,6 +5,9 @@
       "dest": "http://ssh.gsmsv.site:31384/$1"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
