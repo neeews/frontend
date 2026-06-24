@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import SignupPage from './pages/SignupPage'
 import MainPage from './pages/MainPage'
 import ArticleDetailPage from './pages/ArticleDetailPage'
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/articles/:id" element={<ArticleDetailPage />} />
         <Route path="/category/:name" element={<CategoryPage />} />
