@@ -38,6 +38,15 @@ export const authApi = {
   refresh: (refreshToken) =>
     request('/auth/token/refresh', { method: 'POST', body: JSON.stringify({ refreshToken }) }),
 
+  sendPasswordCode: (email) =>
+    request('/auth/password/send-code', { method: 'POST', body: JSON.stringify({ email }) }),
+
+  verifyPasswordCode: (email, code) =>
+    request('/auth/password/verify-code', { method: 'POST', body: JSON.stringify({ email, code }) }),
+
+  resetPassword: (email, newPassword) =>
+    request('/auth/password/reset', { method: 'PATCH', body: JSON.stringify({ email, newPassword }) }),
+
   getMe: () =>
     request('/auth/me', {
       headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
