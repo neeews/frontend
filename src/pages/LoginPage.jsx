@@ -70,6 +70,9 @@ export default function LoginPage() {
         <p className="auth-switch">
           계정이 없으신가요? <Link to="/signup">회원가입</Link>
         </p>
+        <p className="auth-switch">
+          <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
+        </p>
       </div>
     </div>
   )
