@@ -62,7 +62,9 @@ export const articlesApi = {
       : request('/articles/hot'),
   getLatest: () => request('/articles/latest'),
   getByCategory: (category, sort = 'latest', page = 1) =>
-    request(`/articles?category=${encodeURIComponent(category)}&sort=${sort}&page=${page}`),
+    category && category !== '전체'
+      ? request(`/articles?category=${encodeURIComponent(category)}&sort=${sort}&page=${page}`)
+      : request(`/articles?sort=${sort}&page=${page}`),
   getById: (id) => request(`/articles/${id}`),
   search: (q, page = 1) =>
     request(`/search?q=${encodeURIComponent(q)}&page=${page}&limit=10`),

@@ -284,6 +284,16 @@ export default function MainPage() {
                 )}
               </>
             )}
+            {!isLoading && hotArticles.length > 0 && (
+              <div className="hot-more-wrap">
+                <button
+                  className="btn-hot-more"
+                  onClick={() => navigate(activeCategory === '전체' ? '/category/전체' : `/category/${encodeURIComponent(activeCategory)}`)}
+                >
+                  {activeCategory === '전체' ? '전체 기사 보기' : `${activeCategory} 기사 더 보기`} →
+                </button>
+              </div>
+            )}
           </section>
 
           {/* Side articles */}
