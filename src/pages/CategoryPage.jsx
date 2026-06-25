@@ -31,29 +31,51 @@ export default function CategoryPage() {
     setIsLoading(true)
     setArticles([])
     setPage(1)
+    hasMoreRef.current = false
+    setHasMore(false)
     articlesApi.getByCategory(name, sort, 1)
       .then(data => {
         const list = Array.isArray(data) ? data : (data?.articles ?? [])
         setArticles(list)
+        hasMoreRef.current = list.length >= 12
         setHasMore(list.length >= 12)
       })
       .catch(() => setArticles([]))
       .finally(() => setIsLoading(false))
   }, [name, sort])
 
-  const loadMore = () => {
-    const next = page + 1
+  const loadMore = useCallback(() => {
+    if (loadingMoreRef.current || !hasMoreRef.current) return
+    loadingMoreRef.current = true
     setLoadingMore(true)
-    articlesApi.getByCategory(name, sort, next)
-      .then(data => {
-        const list = Array.isArray(data) ? data : (data?.articles ?? [])
-        setArticles(prev => [...prev, ...list])
-        setHasMore(list.length >= 12)
-        setPage(next)
-      })
-      .catch(() => {})
-      .finally(() => setLoadingMore(false))
-  }
+    setPage(prev => {
+      const next = prev + 1
+      articlesApi.getByCategory(name, sort, next)
+        .then(data => {
+          const list = Array.isArray(data) ? data : (data?.articles ?? [])
+          setArticles(prev => [...prev, ...list])
+          hasMoreRef.current = list.length >= 12
+          setHasMore(list.length >= 12)
+        })
+        .catch(() => {})
+        .finally(() => {
+          loadingMoreRef.current = false
+          setLoadingMore(false)
+        })
+      return next
+    })
+  }, [name, sort])
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) loadMore() },
+      { rootMargin: '200px' }
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [loadMore])
 
   return (
     <div className="category-page">
