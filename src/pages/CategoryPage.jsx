@@ -84,11 +84,6 @@ export default function CategoryPage() {
                 className="cat-article-card"
                 onClick={() => navigate(`/articles/${a.id}`)}
               >
-                {a.imageUrl ? (
-                  <img src={a.imageUrl} alt={a.title} className="cat-card-thumb" style={{ objectFit: 'cover', width: '100%' }} />
-                ) : (
-                  <div className="cat-card-thumb" />
-                )}
                 <div className="cat-card-body">
                   {a.category && (
                     <span
