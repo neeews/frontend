@@ -154,7 +154,6 @@ export default function SearchPage() {
                 className="search-result-item"
                 onClick={() => navigate(`/articles/${a.id}`)}
               >
-                <div className="search-result-thumb" />
                 <div className="search-result-body">
                   <div className="search-result-meta">
                     {a.category && (
