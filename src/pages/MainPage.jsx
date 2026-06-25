@@ -193,10 +193,7 @@ export default function MainPage() {
                     className="hot-card hot-card--featured"
                     onClick={() => navigate(`/articles/${featured.id}`)}
                   >
-                    <div
-                      className="hot-card-img placeholder-img"
-                      style={featured.imageUrl ? { backgroundImage: `url(${featured.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
-                    >
+                    <div className="hot-card-img placeholder-img">
                       <div className="img-overlay" />
                       <div className="featured-meta">
                         <span className="rank-badge rank-1">1위</span>
@@ -226,10 +223,7 @@ export default function MainPage() {
                           className="hot-card hot-card--sub"
                           onClick={() => navigate(`/articles/${article.id}`)}
                         >
-                          <div
-                            className="hot-card-img placeholder-img small"
-                            style={article.imageUrl ? { backgroundImage: `url(${article.imageUrl})`, backgroundSize: 'cover' } : {}}
-                          >
+                          <div className="hot-card-img placeholder-img small">
                             <div className="img-overlay" />
                             <div className="sub-meta">
                               <span className={`rank-badge rank-${idx + 2}`}>{idx + 2}위</span>
@@ -318,10 +312,6 @@ export default function MainPage() {
                   className="side-item"
                   onClick={() => navigate(`/articles/${a.id}`)}
                 >
-                  <div
-                    className="side-thumb placeholder-img tiny"
-                    style={a.imageUrl ? { backgroundImage: `url(${a.imageUrl})`, backgroundSize: 'cover' } : {}}
-                  />
                   <div className="side-body">
                     {a.category && (
                       <span
