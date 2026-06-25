@@ -103,27 +103,10 @@
   gap: 8px;
 }
 
-/* ── Load more ── */
-.load-more-wrap {
-  text-align: center;
+/* ── Infinite scroll sentinel ── */
+.scroll-sentinel {
+  height: 1px;
   margin-top: 32px;
-}
-
-.btn-load-more {
-  padding: 13px 40px;
-  background: #fff;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.btn-load-more:hover {
-  border-color: #6366f1;
-  color: #6366f1;
 }
 
 /* ── Empty / loading ── */
