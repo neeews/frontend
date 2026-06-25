@@ -367,75 +367,40 @@
   margin-bottom: 16px;
 }
 
-/* Placeholder images */
-.placeholder-img {
-  background: linear-gradient(135deg, #c7d2fe 0%, #ddd6fe 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.placeholder-img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg,
-    rgba(99,102,241,0.25) 0%,
-    rgba(139,92,246,0.18) 100%
-  );
-}
-
-.placeholder-img.small {
-  background: linear-gradient(135deg, #bfdbfe 0%, #c7d2fe 100%);
-}
-
-.placeholder-img.tiny {
-  background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
-}
-
-.img-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
-  z-index: 1;
-}
-
 /* Featured card */
-.hot-card--featured .hot-card-img {
-  border-radius: 14px;
-  height: 320px;
+.hot-card--featured {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
 }
 
 .featured-meta {
-  position: absolute;
-  top: 14px;
-  left: 14px;
   display: flex;
   gap: 8px;
-  z-index: 2;
+  align-items: center;
 }
 
 .featured-content {
-  position: relative;
-  z-index: 2;
-  padding: 20px;
-  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .featured-title {
   font-size: 18px;
   font-weight: 800;
+  color: #0f172a;
   line-height: 1.4;
-  margin-bottom: 8px;
   letter-spacing: -0.3px;
 }
 
 .featured-summary {
   font-size: 13px;
-  opacity: 0.88;
-  margin-bottom: 10px;
+  color: #64748b;
   line-height: 1.5;
 }
 
@@ -449,28 +414,23 @@
 .hot-card--sub {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  padding: 14px;
   border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #f1f5f9;
-}
-
-.hot-card--sub .hot-card-img {
-  height: 130px;
-  position: relative;
+  background: #fff;
+  border: 1px solid #e2e8f0;
 }
 
 .sub-meta {
-  position: absolute;
-  top: 10px;
-  left: 10px;
   display: flex;
   gap: 6px;
-  z-index: 2;
+  align-items: center;
 }
 
 .sub-content {
-  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .sub-title {
@@ -478,7 +438,6 @@
   font-weight: 700;
   color: #1e293b;
   line-height: 1.4;
-  margin-bottom: 6px;
 }
 
 /* Rank badges */
