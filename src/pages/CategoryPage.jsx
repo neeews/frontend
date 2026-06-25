@@ -129,17 +129,8 @@ export default function CategoryPage() {
           </div>
         )}
 
-        {hasMore && (
-          <div className="load-more-wrap">
-            <button
-              className="btn-load-more"
-              onClick={loadMore}
-              disabled={loadingMore}
-            >
-              {loadingMore ? '불러오는 중...' : '더 보기'}
-            </button>
-          </div>
-        )}
+        <div ref={sentinelRef} className="scroll-sentinel" />
+        {loadingMore && <div className="cat-loading">불러오는 중...</div>}
       </div>
     </div>
   )
