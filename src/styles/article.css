@@ -136,10 +136,8 @@
   color: #fff;
 }
 
-.action-btn.share-btn.copied {
-  background: #10b981;
-  border-color: #10b981;
-  color: #fff;
+.action-btn.source-btn {
+  text-decoration: none;
 }
 
 /* ── Related articles ── */
