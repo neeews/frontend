@@ -220,16 +220,13 @@ export default function MainPage() {
                           className="hot-card hot-card--sub"
                           onClick={() => navigate(`/articles/${article.id}`)}
                         >
-                          <div className="hot-card-img placeholder-img small">
-                            <div className="img-overlay" />
-                            <div className="sub-meta">
-                              <span className={`rank-badge rank-${idx + 2}`}>{idx + 2}위</span>
-                              {article.category && (
-                                <span className="cat-badge" style={{ background: categoryColor[article.category] }}>
-                                  {article.category}
-                                </span>
-                              )}
-                            </div>
+                          <div className="sub-meta">
+                            <span className={`rank-badge rank-${idx + 2}`}>{idx + 2}위</span>
+                            {article.category && (
+                              <span className="cat-badge" style={{ background: categoryColor[article.category] }}>
+                                {article.category}
+                              </span>
+                            )}
                           </div>
                           <div className="sub-content">
                             <h4 className="sub-title">{article.title}</h4>
