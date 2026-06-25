@@ -193,23 +193,20 @@ export default function MainPage() {
                     className="hot-card hot-card--featured"
                     onClick={() => navigate(`/articles/${featured.id}`)}
                   >
-                    <div className="hot-card-img placeholder-img">
-                      <div className="img-overlay" />
-                      <div className="featured-meta">
-                        <span className="rank-badge rank-1">1위</span>
-                        {featured.category && (
-                          <span className="cat-badge" style={{ background: categoryColor[featured.category] }}>
-                            {featured.category}
-                          </span>
-                        )}
-                      </div>
-                      <div className="featured-content">
-                        <h3 className="featured-title">{featured.title}</h3>
-                        {featured.summary && <p className="featured-summary">{featured.summary}</p>}
-                        <div className="article-byline">
-                          <span className="article-time">{timeAgo(featured.publishedAt)}</span>
-                          {featured.source && <span className="article-source">{featured.source}</span>}
-                        </div>
+                    <div className="featured-meta">
+                      <span className="rank-badge rank-1">1위</span>
+                      {featured.category && (
+                        <span className="cat-badge" style={{ background: categoryColor[featured.category] }}>
+                          {featured.category}
+                        </span>
+                      )}
+                    </div>
+                    <div className="featured-content">
+                      <h3 className="featured-title">{featured.title}</h3>
+                      {featured.summary && <p className="featured-summary">{featured.summary}</p>}
+                      <div className="article-byline">
+                        <span className="article-time">{timeAgo(featured.publishedAt)}</span>
+                        {featured.source && <span className="article-source">{featured.source}</span>}
                       </div>
                     </div>
                   </div>
