@@ -37,8 +37,8 @@ export default function CategoryPage() {
       .then(data => {
         const list = Array.isArray(data) ? data : (data?.articles ?? [])
         setArticles(list)
-        hasMoreRef.current = list.length >= 12
-        setHasMore(list.length >= 12)
+        hasMoreRef.current = list.length >= 21
+        setHasMore(list.length >= 21)
       })
       .catch(() => setArticles([]))
       .finally(() => setIsLoading(false))
@@ -54,8 +54,8 @@ export default function CategoryPage() {
         .then(data => {
           const list = Array.isArray(data) ? data : (data?.articles ?? [])
           setArticles(prev => [...prev, ...list])
-          hasMoreRef.current = list.length >= 12
-          setHasMore(list.length >= 12)
+          hasMoreRef.current = list.length >= 21
+          setHasMore(list.length >= 21)
         })
         .catch(() => {})
         .finally(() => {
@@ -76,6 +76,13 @@ export default function CategoryPage() {
     observer.observe(sentinel)
     return () => observer.disconnect()
   }, [loadMore])
+
+  // 초기 로드 후 sentinel이 이미 뷰포트 안에 있으면 수동 트리거
+  useEffect(() => {
+    if (isLoading || !hasMore || !sentinelRef.current) return
+    const rect = sentinelRef.current.getBoundingClientRect()
+    if (rect.top <= window.innerHeight + 200) loadMore()
+  }, [isLoading, hasMore, loadMore])
 
   return (
     <div className="category-page">
