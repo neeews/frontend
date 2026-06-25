@@ -285,5 +285,4 @@
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .search-content { padding: 16px; }
-  .search-result-thumb { display: none; }
 }
