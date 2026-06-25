@@ -105,13 +105,6 @@
   transform: translateY(-1px);
 }
 
-.search-result-thumb {
-  width: 80px;
-  height: 60px;
-  border-radius: 8px;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #c7d2fe 0%, #ddd6fe 100%);
-}
 
 .search-result-body {
   flex: 1;
