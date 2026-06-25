@@ -320,5 +320,5 @@
     padding: 0 16px;
   }
   .article-title { font-size: 22px; }
-  .article-body { padding: 20px; font-size: 16px; }
+  .article-body { padding: 20px 20px; font-size: 16px; }
 }
