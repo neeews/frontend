@@ -23,6 +23,9 @@ export default function CategoryPage() {
   const [hasMore, setHasMore] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
+  const sentinelRef = useRef(null)
+  const loadingMoreRef = useRef(false)
+  const hasMoreRef = useRef(false)
 
   useEffect(() => {
     setIsLoading(true)
