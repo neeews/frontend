@@ -32,7 +32,7 @@ export default function CategoryPage() {
       .then(data => {
         const list = Array.isArray(data) ? data : (data?.articles ?? [])
         setArticles(list)
-        setHasMore(list.length >= 10)
+        setHasMore(list.length >= 12)
       })
       .catch(() => setArticles([]))
       .finally(() => setIsLoading(false))
@@ -45,7 +45,7 @@ export default function CategoryPage() {
       .then(data => {
         const list = Array.isArray(data) ? data : (data?.articles ?? [])
         setArticles(prev => [...prev, ...list])
-        setHasMore(list.length >= 10)
+        setHasMore(list.length >= 12)
         setPage(next)
       })
       .catch(() => {})
