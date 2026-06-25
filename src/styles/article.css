@@ -91,17 +91,101 @@
 
 .article-body {
   font-size: 17px;
-  line-height: 1.8;
+  line-height: 1.9;
   color: #1e293b;
   background: #fff;
   border-radius: 16px;
-  padding: 32px;
+  padding: 36px 40px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
   margin-bottom: 24px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
-.article-body p { margin-bottom: 16px; }
+.article-body > * + * { margin-top: 18px; }
+.article-body > *:first-child { margin-top: 0; }
+
+.article-body p {
+  margin: 0 0 18px;
+  line-height: 1.9;
+}
 .article-body p:last-child { margin-bottom: 0; }
+
+.article-body h1,
+.article-body h2,
+.article-body h3,
+.article-body h4 {
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.4;
+  margin: 32px 0 12px;
+}
+.article-body h1 { font-size: 22px; }
+.article-body h2 { font-size: 20px; }
+.article-body h3 { font-size: 18px; }
+.article-body h4 { font-size: 16px; }
+
+.article-body a {
+  color: #6366f1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  word-break: break-all;
+}
+.article-body a:hover { color: #4f46e5; }
+
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+  margin: 8px auto;
+}
+
+.article-body ul,
+.article-body ol {
+  padding-left: 24px;
+  margin: 0 0 18px;
+}
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li { margin-bottom: 8px; line-height: 1.8; }
+.article-body li:last-child { margin-bottom: 0; }
+
+.article-body blockquote {
+  border-left: 4px solid #6366f1;
+  margin: 24px 0;
+  padding: 14px 20px;
+  background: #f8faff;
+  border-radius: 0 8px 8px 0;
+  color: #475569;
+  font-style: italic;
+}
+
+.article-body strong,
+.article-body b { font-weight: 700; color: #0f172a; }
+
+.article-body em,
+.article-body i { font-style: italic; }
+
+.article-body br + br { display: none; }
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin: 24px 0;
+}
+.article-body th,
+.article-body td {
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  text-align: left;
+}
+.article-body th {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #0f172a;
+}
 
 /* ── Actions ── */
 .article-actions {
