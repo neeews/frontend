@@ -86,10 +86,11 @@ export default function ArticleDetailPage() {
           <div className="article-hero-placeholder" />
         )}
 
-        <div
-          className="article-body"
-          dangerouslySetInnerHTML={{ __html: article.content ?? article.summary ?? '' }}
-        />
+        <div className="article-body">
+          {(article.content ?? article.summary ?? '').split('\n\n').map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
+        </div>
 
         <div className="article-actions">
           <button
