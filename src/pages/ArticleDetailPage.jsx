@@ -88,7 +88,7 @@ export default function ArticleDetailPage() {
 
         <div className="article-body">
           {(article.content ?? article.summary ?? '').split('\n\n').map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
+            <p key={i} style={{ marginBottom: '18px' }}>{paragraph}</p>
           ))}
         </div>
 
@@ -103,10 +103,10 @@ export default function ArticleDetailPage() {
             </svg>
             {isBookmarked ? '북마크 취소' : '북마크'}
           </button>
-          {article.link && (
+          {article.articleUrl && (
             <a
               className="action-btn source-btn"
-              href={article.link}
+              href={article.articleUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
