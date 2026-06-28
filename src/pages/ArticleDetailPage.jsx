@@ -5,6 +5,17 @@ import { timeAgo } from '../utils/time'
 import { useBookmark } from '../hooks/useBookmark'
 import '../styles/article.css'
 
+function parseContent(raw) {
+  if (!raw) return []
+  const withBreaks = raw
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+  const stripped = withBreaks.replace(/<[^>]*>/g, '')
+  const ta = document.createElement('textarea')
+  ta.innerHTML = stripped
+  return ta.value.split('\n\n').map(p => p.trim()).filter(Boolean)
+}
+
 const categoryColor = {
   '경제': '#10b981',
   '연예/문화': '#f59e0b',
@@ -87,7 +98,7 @@ export default function ArticleDetailPage() {
         )}
 
         <div className="article-body">
-          {(article.content ?? article.summary ?? '').split('\n\n').map((paragraph, i) => (
+          {parseContent(article.content ?? article.summary ?? '').map((paragraph, i) => (
             <p key={i} style={{ marginBottom: '18px' }}>{paragraph}</p>
           ))}
         </div>
