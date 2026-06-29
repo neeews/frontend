@@ -5,6 +5,10 @@
       "dest": "http://ssh.gsmsv.site:31384/$1"
     },
     {
+      "src": "/images/(.*)",
+      "dest": "http://ssh.gsmsv.site:31384/images/$1"
+    },
+    {
       "handle": "filesystem"
     },
     {
