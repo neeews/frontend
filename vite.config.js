@@ -6,11 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/auth': { target: 'http://172.31.128.1:9080', changeOrigin: true },
-      '/articles': { target: 'http://172.31.128.1:9080', changeOrigin: true },
-      '/keywords': { target: 'http://172.31.128.1:9080', changeOrigin: true },
-      '/search': { target: 'http://172.31.128.1:9080', changeOrigin: true },
-      '/users': { target: 'http://172.31.128.1:9080', changeOrigin: true },
+      '/api/images': { target: 'http://172.31.128.1:9080', changeOrigin: true },
+      '/api': {
+        target: 'http://172.31.128.1:9080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
 })
