@@ -92,7 +92,7 @@ export default function ArticleDetailPage() {
         <h1 className="article-title">{article.title}</h1>
 
         {article.imageUrl ? (
-          <img src={article.imageUrl} alt={article.title} className="article-hero-img" />
+          <img src={`/api/images/proxy?url=${encodeURIComponent(article.imageUrl)}&w=800`} alt={article.title} className="article-hero-img" />
         ) : (
           <div className="article-hero-placeholder" />
         )}
