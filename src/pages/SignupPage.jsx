@@ -116,6 +116,7 @@ export default function SignupPage() {
   return (
     <div className="auth-page">
       <div className="auth-form-wrap">
+        <Link to="/" className="auth-back">← 메인으로</Link>
         <h2>시작해볼까요? 🚀</h2>
         <p className="auth-subtitle">무료로 가입하고 맞춤 뉴스를 받아보세요</p>
 

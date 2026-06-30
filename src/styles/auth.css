@@ -16,6 +16,18 @@
   box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
 }
 
+.auth-back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.auth-back:hover { color: #0f172a; }
+
 .auth-form-wrap h2 {
   font-size: 32px;
   font-weight: 800;
