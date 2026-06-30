@@ -1,0 +1,348 @@
+/* ── Layout ── */
+.admin-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* ── Header ── */
+.admin-header {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+}
+
+.admin-header-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-header-left h1 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.admin-badge {
+  padding: 3px 10px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.admin-home-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.15s;
+}
+
+.admin-home-btn:hover { color: #0f172a; }
+
+/* ── Content ── */
+.admin-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Stats ── */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.stat-card.pending .stat-value { color: #f59e0b; }
+.stat-card.in-progress .stat-value { color: #3b82f6; }
+.stat-card.resolved .stat-value { color: #10b981; }
+
+/* ── Section ── */
+.admin-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.admin-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.admin-section-header h2 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* ── Filter Tabs ── */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-tab {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-tab.active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-color: transparent;
+  color: #fff;
+}
+
+.filter-tab:not(.active):hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+/* ── Suggestion List ── */
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.suggestion-empty {
+  text-align: center;
+  padding: 48px 0;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+/* ── Suggestion Item ── */
+.suggestion-item {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.suggestion-item:last-child { border-bottom: none; }
+
+.suggestion-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-radius: 8px;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.suggestion-row:hover { background: #fafafa; }
+
+.suggestion-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.suggestion-author-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.suggestion-author {
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.suggestion-date {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.suggestion-preview {
+  font-size: 14px;
+  color: #1e293b;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.suggestion-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Status Badge ── */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-badge.PENDING {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status-badge.IN_PROGRESS {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-badge.RESOLVED {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* ── Action Buttons ── */
+.btn-resolve {
+  padding: 7px 14px;
+  background: #10b981;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.btn-resolve:hover { opacity: 0.82; }
+
+.btn-resolve:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-delete {
+  padding: 7px 14px;
+  background: transparent;
+  color: #ef4444;
+  border: 1.5px solid #ef4444;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.btn-delete:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.chevron {
+  font-size: 12px;
+  color: #94a3b8;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.chevron.open { transform: rotate(180deg); }
+
+/* ── Expanded Detail ── */
+.suggestion-detail {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #1e293b;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ── Loading / Error ── */
+.admin-loading,
+.admin-error {
+  text-align: center;
+  padding: 60px 0;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+.admin-error { color: #ef4444; }
+
+.btn-retry {
+  margin-top: 12px;
+  padding: 10px 24px;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-retry:hover { opacity: 0.85; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .admin-content { padding: 16px; }
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+  .filter-tabs { flex-wrap: wrap; }
+  .suggestion-actions { flex-direction: column; align-items: flex-end; }
+}
