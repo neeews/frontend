@@ -35,9 +35,9 @@ export default function MainPage() {
       articlesApi.getTrending().catch(() => []),
       articlesApi.getLatest().catch(() => []),
     ]).then(([breaking, trending, latest]) => {
-      setBreakingNews(Array.isArray(breaking) ? breaking : (breaking?.articles ?? []))
-      setKeywords(Array.isArray(trending) ? trending : (trending?.keywords ?? []))
-      setLatestArticles(Array.isArray(latest) ? latest : (latest?.articles ?? []))
+      setBreakingNews(breaking)
+      setKeywords(trending)
+      setLatestArticles(latest)
     })
   }, [])
 
@@ -45,10 +45,7 @@ export default function MainPage() {
   useEffect(() => {
     setIsLoading(true)
     articlesApi.getHot(activeCategory)
-      .then(data => {
-        const list = Array.isArray(data) ? data : (data?.articles ?? [])
-        setHotArticles(list)
-      })
+      .then(data => setHotArticles(data))
       .catch(() => setHotArticles([]))
       .finally(() => setIsLoading(false))
   }, [activeCategory])

@@ -53,24 +53,31 @@ async function request(path, options = {}, retry = true) {
   try { return JSON.parse(text) } catch { return null }
 }
 
+const toList = (data, key) => (Array.isArray(data) ? data : (data?.[key] ?? []))
+
 export const articlesApi = {
-  getBreaking: () => request('/articles/breaking'),
-  getTrending: () => request('/keywords/trending'),
+  getBreaking: () => request('/articles/breaking').then(d => toList(d, 'articles')),
+  getTrending: () => request('/keywords/trending').then(d => toList(d, 'keywords')),
   getHot: (category) =>
     category && category !== '전체'
-      ? request(`/articles?category=${encodeURIComponent(category)}&sort=popular`)
-      : request('/articles/hot'),
-  getLatest: () => request('/articles/latest'),
+      ? request(`/articles?category=${encodeURIComponent(category)}&sort=popular`).then(d => toList(d, 'articles'))
+      : request('/articles/hot').then(d => toList(d, 'articles')),
+  getLatest: () => request('/articles/latest').then(d => toList(d, 'articles')),
+  // returns { articles, total, page }
   getByCategory: (category, sort = 'latest', page = 1) =>
     category && category !== '전체'
       ? request(`/articles?category=${encodeURIComponent(category)}&sort=${sort}&page=${page}`)
       : request(`/articles?sort=${sort}&page=${page}`),
+  // returns { article, related }
   getById: (id) => request(`/articles/${id}`),
+  // returns { total, articles }
   search: (q, page = 1) =>
     request(`/search?q=${encodeURIComponent(q)}&page=${page}&limit=10`),
   addBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'POST' }),
   removeBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'DELETE' }),
-  getMyBookmarks: () => request('/users/me/bookmarks'),
+  getMyBookmarks: () => request('/users/me/bookmarks').then(d => toList(d, 'articles')),
+  getSearchHistory: () => request('/users/me/search-history').then(d => d?.history ?? []),
+  clearSearchHistory: () => request('/users/me/search-history', { method: 'DELETE' }),
   getMe: () => request('/auth/me'),
   deleteMe: () => request('/users/me', { method: 'DELETE' }),
 }

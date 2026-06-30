@@ -35,7 +35,7 @@ export default function CategoryPage() {
     setHasMore(false)
     articlesApi.getByCategory(name, sort, 1)
       .then(data => {
-        const list = Array.isArray(data) ? data : (data?.articles ?? [])
+        const list = data?.articles ?? []
         setArticles(list)
         hasMoreRef.current = list.length >= 21
         setHasMore(list.length >= 21)
@@ -52,7 +52,7 @@ export default function CategoryPage() {
       const next = prev + 1
       articlesApi.getByCategory(name, sort, next)
         .then(data => {
-          const list = Array.isArray(data) ? data : (data?.articles ?? [])
+          const list = data?.articles ?? []
           setArticles(prev => [...prev, ...list])
           hasMoreRef.current = list.length >= 21
           setHasMore(list.length >= 21)

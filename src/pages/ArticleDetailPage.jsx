@@ -43,10 +43,8 @@ export default function ArticleDetailPage() {
     setError('')
     articlesApi.getById(id)
       .then(data => {
-        const articleData = data?.article ?? data
-        const relatedData = data?.related ?? []
-        setArticle(articleData)
-        setRelated(relatedData)
+        setArticle(data?.article ?? null)
+        setRelated(data?.related ?? [])
       })
       .catch(() => setError('기사를 불러올 수 없습니다.'))
       .finally(() => setIsLoading(false))

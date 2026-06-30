@@ -38,10 +38,7 @@ export default function MyPage() {
         .finally(() => setIsLoading(false))
     }
     articlesApi.getMyBookmarks()
-      .then(data => {
-        const list = Array.isArray(data) ? data : (data?.articles ?? data?.bookmarks ?? [])
-        setBookmarks(list)
-      })
+      .then(setBookmarks)
       .catch(() => {})
   }, [ctxUser])
 

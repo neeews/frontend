@@ -42,9 +42,8 @@ export default function SearchPage() {
     setIsLoading(true)
     articlesApi.search(q)
       .then(data => {
-        const list = Array.isArray(data) ? data : (data?.articles ?? [])
-        setArticles(list)
-        setTotal(data?.total ?? list.length)
+        setArticles(data?.articles ?? [])
+        setTotal(data?.total ?? 0)
       })
       .catch(() => setArticles([]))
       .finally(() => setIsLoading(false))
