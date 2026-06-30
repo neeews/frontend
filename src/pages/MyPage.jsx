@@ -150,6 +150,9 @@ export default function MyPage() {
         </section>
 
         <div className="mypage-actions">
+          {user?.role === 'ROLE_ADMIN' && (
+            <button className="btn-logout" onClick={() => navigate('/admin')}>관리자 페이지</button>
+          )}
           <button className="btn-logout" onClick={handleLogout}>로그아웃</button>
           <button className="btn-delete-account" onClick={deleteAccount}>회원 탈퇴</button>
         </div>
