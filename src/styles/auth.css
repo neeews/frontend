@@ -166,10 +166,10 @@
   padding: 12px 16px !important;
   border: 1.5px solid #e2e8f0 !important;
   border-radius: 10px !important;
-  font-size: 20px !important;
-  letter-spacing: 8px;
+  font-size: 18px !important;
+  font-family: inherit !important;
+  letter-spacing: 3px;
   text-align: center;
-  font-family: monospace !important;
 }
 
 .code-input:focus {
@@ -227,6 +227,64 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+/* ── Password toggle ── */
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 48px;
+}
+
+.btn-eye {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.btn-eye:hover { color: #475569; }
+
+/* ── Password rules ── */
+.pw-rules {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+
+.pw-rules li {
+  font-size: 12px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.pw-rules li::before {
+  content: '○';
+  font-size: 10px;
+}
+
+.pw-rules li.met {
+  color: #10b981;
+}
+
+.pw-rules li.met::before {
+  content: '●';
 }
 
 .auth-error {
