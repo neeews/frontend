@@ -22,7 +22,6 @@ export default function MainPage() {
   const { isLoggedIn, logout } = useAuth()
 
   const [activeCategory, setActiveCategory] = useState('전체')
-  const [searchInput, setSearchInput] = useState('')
   const [keywords, setKeywords] = useState([])
   const [hotArticles, setHotArticles] = useState([])
   const [latestArticles, setLatestArticles] = useState([])
@@ -56,12 +55,6 @@ export default function MainPage() {
 
   const handleCategoryClick = cat => {
     setActiveCategory(cat)
-  }
-
-  const handleSearch = e => {
-    e.preventDefault()
-    const q = searchInput.trim()
-    if (q) navigate(`/search?q=${encodeURIComponent(q)}`)
   }
 
   const handleLogout = async () => {
@@ -100,14 +93,12 @@ export default function MainPage() {
           </nav>
 
           <div className="header-actions">
-            <form className="header-search-form" onSubmit={handleSearch}>
-              <input
-                className="header-search-input"
-                value={searchInput}
-                onChange={e => setSearchInput(e.target.value)}
-                placeholder="검색"
-              />
-            </form>
+            <button className="header-search-btn" onClick={() => navigate('/search')} aria-label="검색">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
             {isLoggedIn ? (
               <div className="header-user-menu">
                 <Link to="/mypage" className="header-mypage-btn">마이페이지</Link>
