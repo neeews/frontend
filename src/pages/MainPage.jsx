@@ -3,9 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
 import { timeAgo } from '../utils/time'
+import CategoryNav from '../components/CategoryNav'
 import '../styles/main.css'
-
-const CATEGORIES = ['전체', '정치', '경제', '사회', '연예/문화', '스포츠', '세계', 'IT/과학']
 
 const categoryColor = {
   '경제': '#10b981',
@@ -77,17 +76,7 @@ export default function MainPage() {
             <span className="logo-text">뉴스피드</span>
           </Link>
 
-          <nav className="category-nav">
-            {CATEGORIES.map(cat => (
-              <button
-                key={cat}
-                className={`cat-btn${activeCategory === cat ? ' active' : ''}`}
-                onClick={() => handleCategoryClick(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </nav>
+          <CategoryNav activeCategory={activeCategory} onSelect={handleCategoryClick} />
 
           <div className="header-actions">
             <button className="header-search-btn" onClick={() => navigate('/search')} aria-label="검색">

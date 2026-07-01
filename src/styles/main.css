@@ -55,40 +55,6 @@
   letter-spacing: -0.5px;
 }
 
-.category-nav {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  flex: 1;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.category-nav::-webkit-scrollbar { display: none; }
-
-.cat-btn {
-  padding: 7px 14px;
-  border: none;
-  background: transparent;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #64748b;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s, color 0.15s;
-}
-
-.cat-btn:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
-
-.cat-btn.active {
-  background: #ede9fe;
-  color: #6366f1;
-}
-
 .header-actions {
   display: flex;
   align-items: center;

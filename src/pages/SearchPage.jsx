@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
+import CategoryNav from '../components/CategoryNav'
 import '../styles/search.css'
 
 const CATEGORIES = ['경제', '정치', '사회', 'IT/과학', '연예/문화', '스포츠', '세계']
@@ -220,6 +221,12 @@ export default function SearchPage() {
           </form>
         </div>
       </header>
+
+      <div className="page-category-bar">
+        <div className="page-category-bar-inner">
+          <CategoryNav onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)} />
+        </div>
+      </div>
 
       <div className="search-content">
         {q && !isLoading && (

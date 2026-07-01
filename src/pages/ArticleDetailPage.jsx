@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
 import { useBookmark } from '../hooks/useBookmark'
+import CategoryNav from '../components/CategoryNav'
 import '../styles/article.css'
 
 function parseContent(raw) {
@@ -72,6 +73,15 @@ export default function ArticleDetailPage() {
           <Link to="/" className="nav-logo">뉴스피드</Link>
         </div>
       </header>
+
+      <div className="page-category-bar">
+        <div className="page-category-bar-inner">
+          <CategoryNav
+            activeCategory={article.category}
+            onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)}
+          />
+        </div>
+      </div>
 
       <article className="article-container">
         <div className="article-meta">
