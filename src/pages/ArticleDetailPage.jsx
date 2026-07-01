@@ -72,16 +72,14 @@ export default function ArticleDetailPage() {
           </button>
           <Link to="/" className="nav-logo">neeews</Link>
         </div>
-      </header>
 
-      <div className="page-category-bar" style={{ top: 56 }}>
-        <div className="page-category-bar-inner">
+        <div className="header-category-row">
           <CategoryNav
             activeCategory={article.category}
             onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)}
           />
         </div>
-      </div>
+      </header>
 
       <article className="article-container">
         <div className="article-meta">

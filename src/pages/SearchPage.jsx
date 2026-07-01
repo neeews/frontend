@@ -220,13 +220,11 @@ export default function SearchPage() {
             <button type="submit" className="search-submit-btn">검색</button>
           </form>
         </div>
-      </header>
 
-      <div className="page-category-bar" style={{ top: 60 }}>
-        <div className="page-category-bar-inner">
+        <div className="header-category-row">
           <CategoryNav onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)} />
         </div>
-      </div>
+      </header>
 
       <div className="search-content">
         {q && !isLoading && (
