@@ -222,7 +222,7 @@ export default function SearchPage() {
         </div>
       </header>
 
-      <div className="page-category-bar">
+      <div className="page-category-bar" style={{ top: 60 }}>
         <div className="page-category-bar-inner">
           <CategoryNav onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)} />
         </div>

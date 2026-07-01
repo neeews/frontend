@@ -74,7 +74,7 @@ export default function ArticleDetailPage() {
         </div>
       </header>
 
-      <div className="page-category-bar">
+      <div className="page-category-bar" style={{ top: 56 }}>
         <div className="page-category-bar-inner">
           <CategoryNav
             activeCategory={article.category}

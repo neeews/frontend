@@ -37,6 +37,9 @@
 .page-category-bar {
   background: #fff;
   border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  z-index: 99;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
 }
 
 .page-category-bar-inner {
