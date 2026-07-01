@@ -73,7 +73,7 @@ export default function MainPage() {
         <div className="header-inner">
           <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
             <span className="logo-mark">N</span>
-            <span className="logo-text">뉴스피드</span>
+            <span className="logo-text">neeews</span>
           </Link>
 
           <CategoryNav activeCategory={activeCategory} onSelect={handleCategoryClick} />
@@ -307,7 +307,7 @@ export default function MainPage() {
       </main>
 
       <footer className="site-footer">
-        <p>© 2026 뉴스피드. 모든 뉴스를 한눈에.</p>
+        <p>© 2026 neeews. 모든 뉴스를 한눈에.</p>
       </footer>
     </div>
   )

@@ -70,7 +70,7 @@ export default function ArticleDetailPage() {
           <button className="back-btn" onClick={() => navigate(-1)}>
             ← 뒤로
           </button>
-          <Link to="/" className="nav-logo">뉴스피드</Link>
+          <Link to="/" className="nav-logo">neeews</Link>
         </div>
       </header>
 
