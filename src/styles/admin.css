@@ -59,14 +59,111 @@
 
 .admin-home-btn:hover { color: #0f172a; }
 
-/* ── Content ── */
-.admin-content {
-  max-width: 1000px;
+/* ── Body (sidebar + content) ── */
+.admin-body {
+  display: flex;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 28px 24px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* ── Sidebar ── */
+.admin-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 88px;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.admin-nav-item:hover:not(.disabled) {
+  background: #f1f5f9;
+  color: #6366f1;
+}
+
+.admin-nav-item.active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff;
+}
+
+.admin-nav-item.disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.nav-icon { font-size: 16px; flex-shrink: 0; }
+.nav-label { flex: 1; }
+
+.nav-soon {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  background: #e2e8f0;
+  color: #94a3b8;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.admin-nav-item.active .nav-soon {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+
+/* ── Content ── */
+.admin-content {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+/* ── Coming Soon ── */
+.admin-coming-soon {
+  background: #fff;
+  border-radius: 16px;
+  padding: 80px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.coming-soon-icon { font-size: 48px; margin-bottom: 16px; }
+
+.admin-coming-soon h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.admin-coming-soon p {
+  font-size: 14px;
+  color: #94a3b8;
 }
 
 /* ── Stats ── */
@@ -340,8 +437,24 @@
 .btn-retry:hover { opacity: 0.85; }
 
 /* ── Responsive ── */
+@media (max-width: 768px) {
+  .admin-body {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: static;
+  }
+
+  .admin-nav-item { flex: 1; min-width: 120px; justify-content: center; }
+  .nav-label { flex: unset; }
+}
+
 @media (max-width: 640px) {
-  .admin-content { padding: 16px; }
   .admin-stats { grid-template-columns: 1fr 1fr; }
   .filter-tabs { flex-wrap: wrap; }
   .suggestion-actions { flex-direction: column; align-items: flex-end; }

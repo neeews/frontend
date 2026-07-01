@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { adminApi } from '../api/admin'
 import '../styles/admin.css'
 
+const NAV_ITEMS = [
+  { key: 'suggestions', label: '건의함', icon: '💬', available: true },
+  { key: 'members', label: '회원 관리', icon: '👥', available: false },
+  { key: 'content', label: '콘텐츠 관리', icon: '📰', available: false },
+  { key: 'settings', label: '설정', icon: '⚙️', available: false },
+]
+
 const FILTERS = [
   { key: 'ALL', label: '전체' },
   { key: 'PENDING', label: '미처리' },
@@ -66,8 +73,7 @@ function SuggestionItem({ item, onStatusChange, onDelete }) {
   )
 }
 
-export default function AdminPage() {
-  const navigate = useNavigate()
+function SuggestionsPanel() {
   const [suggestions, setSuggestions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -90,9 +96,7 @@ export default function AdminPage() {
   const handleStatusChange = async (id, status) => {
     try {
       await adminApi.updateSuggestionStatus(id, status)
-      setSuggestions(prev =>
-        prev.map(s => s.id === id ? { ...s, status } : s)
-      )
+      setSuggestions(prev => prev.map(s => s.id === id ? { ...s, status } : s))
     } catch (err) {
       alert(err.message)
     }
@@ -118,6 +122,89 @@ export default function AdminPage() {
   const resolvedCount = suggestions.filter(s => s.status === 'RESOLVED').length
 
   return (
+    <>
+      <div className="admin-stats">
+        <div className="stat-card">
+          <div className="stat-label">전체 건의사항</div>
+          <div className="stat-value">{suggestions.length}</div>
+        </div>
+        <div className="stat-card pending">
+          <div className="stat-label">미처리</div>
+          <div className="stat-value">{pendingCount}</div>
+        </div>
+        <div className="stat-card in-progress">
+          <div className="stat-label">처리 중</div>
+          <div className="stat-value">{inProgressCount}</div>
+        </div>
+        <div className="stat-card resolved">
+          <div className="stat-label">처리 완료</div>
+          <div className="stat-value">{resolvedCount}</div>
+        </div>
+      </div>
+
+      <div className="admin-section">
+        <div className="admin-section-header">
+          <h2>건의사항 목록</h2>
+          <div className="filter-tabs">
+            {FILTERS.map(f => (
+              <button
+                key={f.key}
+                className={`filter-tab${filter === f.key ? ' active' : ''}`}
+                onClick={() => setFilter(f.key)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {isLoading && <div className="admin-loading">불러오는 중...</div>}
+
+        {error && (
+          <div className="admin-error">
+            <p>{error}</p>
+            <button className="btn-retry" onClick={fetchSuggestions}>다시 시도</button>
+          </div>
+        )}
+
+        {!isLoading && !error && (
+          filtered.length === 0 ? (
+            <div className="suggestion-empty">건의사항이 없습니다.</div>
+          ) : (
+            <div className="suggestion-list">
+              {filtered.map(item => (
+                <SuggestionItem
+                  key={item.id}
+                  item={item}
+                  onStatusChange={handleStatusChange}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          )
+        )}
+      </div>
+    </>
+  )
+}
+
+function ComingSoonPanel({ label }) {
+  return (
+    <div className="admin-coming-soon">
+      <div className="coming-soon-icon">🚧</div>
+      <h3>{label}</h3>
+      <p>준비 중인 기능입니다.</p>
+    </div>
+  )
+}
+
+export default function AdminPage() {
+  const navigate = useNavigate()
+  const [activeNav, setActiveNav] = useState('suggestions')
+
+  const activeItem = NAV_ITEMS.find(n => n.key === activeNav)
+
+  return (
     <div className="admin-page">
       <header className="admin-header">
         <div className="admin-header-inner">
@@ -131,68 +218,28 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <div className="admin-content">
-        <div className="admin-stats">
-          <div className="stat-card">
-            <div className="stat-label">전체 건의사항</div>
-            <div className="stat-value">{suggestions.length}</div>
-          </div>
-          <div className="stat-card pending">
-            <div className="stat-label">미처리</div>
-            <div className="stat-value">{pendingCount}</div>
-          </div>
-          <div className="stat-card in-progress">
-            <div className="stat-label">처리 중</div>
-            <div className="stat-value">{inProgressCount}</div>
-          </div>
-          <div className="stat-card resolved">
-            <div className="stat-label">처리 완료</div>
-            <div className="stat-value">{resolvedCount}</div>
-          </div>
-        </div>
+      <div className="admin-body">
+        <nav className="admin-sidebar">
+          {NAV_ITEMS.map(item => (
+            <button
+              key={item.key}
+              className={`admin-nav-item${activeNav === item.key ? ' active' : ''}${!item.available ? ' disabled' : ''}`}
+              onClick={() => item.available && setActiveNav(item.key)}
+              disabled={!item.available}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-label">{item.label}</span>
+              {!item.available && <span className="nav-soon">준비 중</span>}
+            </button>
+          ))}
+        </nav>
 
-        <div className="admin-section">
-          <div className="admin-section-header">
-            <h2>건의사항 목록</h2>
-            <div className="filter-tabs">
-              {FILTERS.map(f => (
-                <button
-                  key={f.key}
-                  className={`filter-tab${filter === f.key ? ' active' : ''}`}
-                  onClick={() => setFilter(f.key)}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {isLoading && <div className="admin-loading">불러오는 중...</div>}
-
-          {error && (
-            <div className="admin-error">
-              <p>{error}</p>
-              <button className="btn-retry" onClick={fetchSuggestions}>다시 시도</button>
-            </div>
-          )}
-
-          {!isLoading && !error && (
-            filtered.length === 0 ? (
-              <div className="suggestion-empty">건의사항이 없습니다.</div>
-            ) : (
-              <div className="suggestion-list">
-                {filtered.map(item => (
-                  <SuggestionItem
-                    key={item.id}
-                    item={item}
-                    onStatusChange={handleStatusChange}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </div>
-            )
-          )}
-        </div>
+        <main className="admin-content">
+          {activeItem?.available
+            ? activeNav === 'suggestions' && <SuggestionsPanel />
+            : <ComingSoonPanel label={activeItem?.label ?? ''} />
+          }
+        </main>
       </div>
     </div>
   )

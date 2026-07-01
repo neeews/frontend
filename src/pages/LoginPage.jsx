@@ -36,7 +36,7 @@ export default function LoginPage() {
     try {
       const data = await authApi.login(form.email, form.password)
       login(data)
-      navigate(data.user?.role === 'ROLE_ADMIN' ? '/admin' : '/')
+      navigate('/')
     } catch (err) {
       setError(err.message || '이메일 또는 비밀번호가 올바르지 않습니다.')
     } finally {
