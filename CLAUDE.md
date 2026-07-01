@@ -20,3 +20,4 @@ No test framework is configured.
 ## Response
 
 - 모든 응답은 한국어로 한다.
+- 절대 push를 하지 않는다
