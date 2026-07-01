@@ -21,3 +21,22 @@ h1, h2, h3, h4, h5, h6, p {
 input, button {
   font-family: inherit;
 }
+
+/* UI 크롬 요소 텍스트 선택 방지 */
+button,
+a,
+.logo, .logo-text, .logo-mark,
+.site-header, .site-footer,
+.ticker-bar,
+.admin-header, .mypage-header,
+.section-title, .section-date,
+.rank-badge, .cat-badge,
+.status-badge, .admin-badge, .nav-soon,
+.filter-tab, .interest-chip, .admin-nav-item,
+.stat-card,
+.kw-rank, .kw-change, .list-rank,
+.profile-avatar,
+.pw-rules,
+.coming-soon-icon {
+  user-select: none;
+}
