@@ -132,12 +132,16 @@ export default function SearchPage() {
   return (
     <div className="search-page">
       <header className="search-page-header">
-        <div className="search-page-header-inner">
+        <div className="search-page-header-top">
           <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
             <span className="logo-mark">N</span>
             <span className="logo-text">neeews</span>
           </Link>
 
+          <CategoryNav onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)} />
+        </div>
+
+        <div className="search-page-header-inner">
           <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로</button>
 
           <form className="search-form" onSubmit={submit}>
@@ -225,10 +229,6 @@ export default function SearchPage() {
 
             <button type="submit" className="search-submit-btn">검색</button>
           </form>
-        </div>
-
-        <div className="header-category-row">
-          <CategoryNav onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)} />
         </div>
       </header>
 
