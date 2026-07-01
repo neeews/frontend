@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, useNavigate, Link } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
+import '../styles/brand.css'
 import '../styles/search.css'
 
 const CATEGORIES = ['경제', '정치', '사회', 'IT/과학', '연예/문화', '스포츠', '세계']
@@ -132,6 +133,11 @@ export default function SearchPage() {
     <div className="search-page">
       <header className="search-page-header">
         <div className="search-page-header-inner">
+          <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
+            <span className="logo-mark">N</span>
+            <span className="logo-text">neeews</span>
+          </Link>
+
           <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로</button>
 
           <form className="search-form" onSubmit={submit}>

@@ -4,6 +4,7 @@ import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
 import { timeAgo } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
+import '../styles/brand.css'
 import '../styles/main.css'
 
 const categoryColor = {
