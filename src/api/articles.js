@@ -71,9 +71,9 @@ export const articlesApi = {
   // returns { article, related }
   getById: (id) => request(`/articles/${id}`),
   // returns { total, articles }
-  search: (q, category, page = 1) => {
-    const filter = category && category !== '전체' ? `&filter=${encodeURIComponent(category)}` : ''
-    return request(`/search?q=${encodeURIComponent(q)}${filter}&page=${page}&limit=10`)
+  search: (q, filter, page = 1) => {
+    const f = filter ? `&filter=${encodeURIComponent(filter)}` : ''
+    return request(`/search?q=${encodeURIComponent(q)}${f}&page=${page}&limit=10`)
   },
   addBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'POST' }),
   removeBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'DELETE' }),

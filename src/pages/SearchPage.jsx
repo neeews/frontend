@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
 import '../styles/search.css'
 
-const CATEGORIES = ['전체', '경제', '정치', '사회', 'IT/과학', '연예/문화', '스포츠', '세계']
+const CATEGORIES = ['경제', '정치', '사회', 'IT/과학', '연예/문화', '스포츠', '세계']
+const SOURCES = ['연합뉴스', '동아일보', '경향신문', '한겨레', '한국경제', '전자신문', 'ZDnet코리아']
 
 const categoryColor = {
   '경제': '#10b981',
@@ -29,34 +30,48 @@ function loadRecent() {
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const q = searchParams.get('q') ?? ''
-  const categoryFromUrl = searchParams.get('category') ?? '전체'
+  const filterFromUrl = searchParams.get('filter') ?? ''
   const navigate = useNavigate()
 
   const [inputValue, setInputValue] = useState(q)
-  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl)
+  const [activeFilter, setActiveFilter] = useState(filterFromUrl)
+  const [showFilterDrop, setShowFilterDrop] = useState(false)
   const [articles, setArticles] = useState([])
   const [total, setTotal] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [recentSearches, setRecentSearches] = useState(loadRecent)
   const [showRecent, setShowRecent] = useState(false)
 
+  const filterRef = useRef(null)
+
   useEffect(() => {
     setInputValue(q)
-    setSelectedCategory(searchParams.get('category') ?? '전체')
+    const f = searchParams.get('filter') ?? ''
+    setActiveFilter(f)
     if (!q.trim()) { setArticles([]); return }
     setIsLoading(true)
-    articlesApi.search(q, searchParams.get('category') ?? '전체')
+    articlesApi.search(q, f)
       .then(data => {
         setArticles(data?.articles ?? [])
         setTotal(data?.total ?? 0)
       })
       .catch(() => setArticles([]))
       .finally(() => setIsLoading(false))
-  }, [q, categoryFromUrl])
+  }, [q, filterFromUrl])
 
-  const buildParams = (newQ, cat) => {
+  useEffect(() => {
+    const handler = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setShowFilterDrop(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const buildParams = (newQ, filter) => {
     const params = { q: newQ }
-    if (cat && cat !== '전체') params.category = cat
+    if (filter) params.filter = filter
     return params
   }
 
@@ -88,19 +103,28 @@ export default function SearchPage() {
     if (!trimmed) return
     saveSearch(trimmed)
     setShowRecent(false)
-    setSearchParams(buildParams(trimmed, selectedCategory))
+    setSearchParams(buildParams(trimmed, activeFilter))
   }
 
   const clickRecent = (keyword) => {
     setInputValue(keyword)
     saveSearch(keyword)
     setShowRecent(false)
-    setSearchParams(buildParams(keyword, selectedCategory))
+    setSearchParams(buildParams(keyword, activeFilter))
   }
 
-  const changeCategory = (cat) => {
-    setSelectedCategory(cat)
-    if (q.trim()) setSearchParams(buildParams(q, cat))
+  const applyFilter = (value) => {
+    const next = value === activeFilter ? '' : value
+    setActiveFilter(next)
+    setShowFilterDrop(false)
+    if (q.trim()) setSearchParams(buildParams(q, next))
+  }
+
+  const clearFilter = (e) => {
+    e.stopPropagation()
+    setActiveFilter('')
+    setShowFilterDrop(false)
+    if (q.trim()) setSearchParams(buildParams(q, ''))
   }
 
   return (
@@ -108,55 +132,92 @@ export default function SearchPage() {
       <header className="search-page-header">
         <div className="search-page-header-inner">
           <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로</button>
-          <div className="search-form-wrap">
-            <form className="search-form" onSubmit={submit}>
+
+          <form className="search-form" onSubmit={submit}>
+            {/* 검색 입력 + 최근 검색어 드롭다운 */}
+            <div className="search-input-wrap">
               <input
                 className="search-input"
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
                 placeholder="검색어를 입력하세요"
                 autoFocus
-                onFocus={() => setShowRecent(true)}
+                onClick={() => setShowRecent(true)}
                 onBlur={() => setTimeout(() => setShowRecent(false), 150)}
               />
-              <button type="submit" className="search-submit-btn">검색</button>
-            </form>
-
-            {showRecent && !inputValue && recentSearches.length > 0 && (
-              <div className="recent-searches">
-                <div className="recent-header">
-                  <span className="recent-label">최근 검색어</span>
-                  <button className="recent-clear-all" onClick={clearSearches}>전체 삭제</button>
-                </div>
-                {recentSearches.map(keyword => (
-                  <div key={keyword} className="recent-item" onClick={() => clickRecent(keyword)}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
-                      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                    <span className="recent-item-text">{keyword}</span>
-                    <button
-                      className="recent-remove"
-                      onClick={e => { e.stopPropagation(); removeSearch(keyword) }}
-                    >×</button>
+              {showRecent && !inputValue && recentSearches.length > 0 && (
+                <div className="recent-searches">
+                  <div className="recent-header">
+                    <span className="recent-label">최근 검색어</span>
+                    <button className="recent-clear-all" onClick={clearSearches}>전체 삭제</button>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+                  {recentSearches.map(keyword => (
+                    <div key={keyword} className="recent-item" onClick={() => clickRecent(keyword)}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
+                        <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      <span className="recent-item-text">{keyword}</span>
+                      <button
+                        className="recent-remove"
+                        onClick={e => { e.stopPropagation(); removeSearch(keyword) }}
+                      >×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
-        <div className="search-filter-bar">
-          <div className="search-filter-inner">
-            {CATEGORIES.map(cat => (
+            {/* 필터 드롭다운 */}
+            <div className="filter-drop-wrap" ref={filterRef}>
               <button
-                key={cat}
-                className={`search-filter-btn${selectedCategory === cat ? ' active' : ''}`}
-                onClick={() => changeCategory(cat)}
+                type="button"
+                className={`filter-drop-btn${activeFilter ? ' active' : ''}`}
+                onClick={() => setShowFilterDrop(v => !v)}
               >
-                {cat}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="4" y1="6" x2="20" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="11" y1="18" x2="13" y2="18" />
+                </svg>
+                <span>{activeFilter || '필터'}</span>
+                {activeFilter && (
+                  <span className="filter-clear-x" onClick={clearFilter}>×</span>
+                )}
               </button>
-            ))}
-          </div>
+
+              {showFilterDrop && (
+                <div className="filter-dropdown">
+                  <div className="filter-section">
+                    <div className="filter-section-label">카테고리</div>
+                    <div className="filter-chips">
+                      {CATEGORIES.map(cat => (
+                        <button
+                          key={cat}
+                          type="button"
+                          className={`filter-chip${activeFilter === cat ? ' active' : ''}`}
+                          onClick={() => applyFilter(cat)}
+                        >{cat}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="filter-divider" />
+                  <div className="filter-section">
+                    <div className="filter-section-label">언론사</div>
+                    <div className="filter-chips">
+                      {SOURCES.map(src => (
+                        <button
+                          key={src}
+                          type="button"
+                          className={`filter-chip${activeFilter === src ? ' active' : ''}`}
+                          onClick={() => applyFilter(src)}
+                        >{src}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button type="submit" className="search-submit-btn">검색</button>
+          </form>
         </div>
       </header>
 
@@ -164,9 +225,7 @@ export default function SearchPage() {
         {q && !isLoading && (
           <p className="search-result-count">
             <strong>"{q}"</strong>
-            {selectedCategory !== '전체' && (
-              <span className="search-filter-tag">{selectedCategory}</span>
-            )}
+            {activeFilter && <span className="search-filter-tag">{activeFilter}</span>}
             {' '}검색 결과 {total.toLocaleString()}건
           </p>
         )}
