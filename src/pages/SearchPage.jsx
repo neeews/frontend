@@ -4,6 +4,8 @@ import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
 import '../styles/search.css'
 
+const CATEGORIES = ['전체', '경제', '정치', '사회', 'IT/과학', '연예/문화', '스포츠', '세계']
+
 const categoryColor = {
   '경제': '#10b981',
   '연예/문화': '#f59e0b',
@@ -27,9 +29,11 @@ function loadRecent() {
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const q = searchParams.get('q') ?? ''
+  const categoryFromUrl = searchParams.get('category') ?? '전체'
   const navigate = useNavigate()
 
   const [inputValue, setInputValue] = useState(q)
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl)
   const [articles, setArticles] = useState([])
   const [total, setTotal] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
@@ -38,16 +42,23 @@ export default function SearchPage() {
 
   useEffect(() => {
     setInputValue(q)
+    setSelectedCategory(searchParams.get('category') ?? '전체')
     if (!q.trim()) { setArticles([]); return }
     setIsLoading(true)
-    articlesApi.search(q)
+    articlesApi.search(q, searchParams.get('category') ?? '전체')
       .then(data => {
         setArticles(data?.articles ?? [])
         setTotal(data?.total ?? 0)
       })
       .catch(() => setArticles([]))
       .finally(() => setIsLoading(false))
-  }, [q])
+  }, [q, categoryFromUrl])
+
+  const buildParams = (newQ, cat) => {
+    const params = { q: newQ }
+    if (cat && cat !== '전체') params.category = cat
+    return params
+  }
 
   const saveSearch = (query) => {
     setRecentSearches(prev => {
@@ -61,6 +72,7 @@ export default function SearchPage() {
     setRecentSearches(prev => {
       const updated = prev.filter(i => i !== query)
       localStorage.setItem('recentSearches', JSON.stringify(updated))
+      if (updated.length === 0) setShowRecent(false)
       return updated
     })
   }
@@ -76,14 +88,19 @@ export default function SearchPage() {
     if (!trimmed) return
     saveSearch(trimmed)
     setShowRecent(false)
-    setSearchParams({ q: trimmed })
+    setSearchParams(buildParams(trimmed, selectedCategory))
   }
 
   const clickRecent = (keyword) => {
     setInputValue(keyword)
     saveSearch(keyword)
     setShowRecent(false)
-    setSearchParams({ q: keyword })
+    setSearchParams(buildParams(keyword, selectedCategory))
+  }
+
+  const changeCategory = (cat) => {
+    setSelectedCategory(cat)
+    if (q.trim()) setSearchParams(buildParams(q, cat))
   }
 
   return (
@@ -127,12 +144,30 @@ export default function SearchPage() {
             )}
           </div>
         </div>
+
+        <div className="search-filter-bar">
+          <div className="search-filter-inner">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                className={`search-filter-btn${selectedCategory === cat ? ' active' : ''}`}
+                onClick={() => changeCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       <div className="search-content">
         {q && !isLoading && (
-          <p className="search-result-summary">
-            <strong>"{q}"</strong> 검색 결과 {total.toLocaleString()}건
+          <p className="search-result-count">
+            <strong>"{q}"</strong>
+            {selectedCategory !== '전체' && (
+              <span className="search-filter-tag">{selectedCategory}</span>
+            )}
+            {' '}검색 결과 {total.toLocaleString()}건
           </p>
         )}
 
