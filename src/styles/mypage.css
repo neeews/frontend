@@ -223,6 +223,59 @@
   gap: 8px;
 }
 
+/* ── Suggestion form ── */
+.suggestion-form-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.suggestion-form-section h2 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.suggestion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.suggestion-input,
+.suggestion-textarea {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #0f172a;
+  resize: vertical;
+}
+
+.suggestion-input:focus,
+.suggestion-textarea:focus {
+  outline: none;
+  border-color: #8b5cf6;
+}
+
+.suggestion-form .btn-save-interests {
+  align-self: flex-start;
+}
+
+.suggestion-form .btn-save-interests:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.suggestion-error {
+  font-size: 13px;
+  color: #ef4444;
+}
+
 /* ── Actions ── */
 .mypage-actions {
   background: #fff;

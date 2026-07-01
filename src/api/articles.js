@@ -82,4 +82,6 @@ export const articlesApi = {
   clearSearchHistory: () => request('/users/me/search-history', { method: 'DELETE' }),
   getMe: () => request('/auth/me'),
   deleteMe: () => request('/users/me', { method: 'DELETE' }),
+  submitSuggestion: (title, content) =>
+    request('/suggestions', { method: 'POST', body: JSON.stringify({ title, content }) }),
 }

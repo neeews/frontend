@@ -29,6 +29,9 @@ export default function MyPage() {
   const [isLoading, setIsLoading] = useState(!ctxUser)
   const [interests, setInterests] = useState(loadInterests)
   const [interestSaved, setInterestSaved] = useState(false)
+  const [suggestionTitle, setSuggestionTitle] = useState('')
+  const [suggestionContent, setSuggestionContent] = useState('')
+  const [suggestionStatus, setSuggestionStatus] = useState('idle')
 
   useEffect(() => {
     if (!ctxUser) {
@@ -51,6 +54,21 @@ export default function MyPage() {
     localStorage.setItem('interestCategories', JSON.stringify(interests))
     setInterestSaved(true)
     setTimeout(() => setInterestSaved(false), 2000)
+  }
+
+  const submitSuggestion = async (e) => {
+    e.preventDefault()
+    if (!suggestionTitle.trim() || !suggestionContent.trim()) return
+    setSuggestionStatus('submitting')
+    try {
+      await articlesApi.submitSuggestion(suggestionTitle.trim(), suggestionContent.trim())
+      setSuggestionTitle('')
+      setSuggestionContent('')
+      setSuggestionStatus('submitted')
+      setTimeout(() => setSuggestionStatus('idle'), 2000)
+    } catch {
+      setSuggestionStatus('error')
+    }
   }
 
   const handleLogout = async () => {
@@ -144,6 +162,36 @@ export default function MyPage() {
               ))}
             </div>
           )}
+        </section>
+
+        <section className="suggestion-form-section">
+          <h2>건의하기</h2>
+          <p className="interests-subtitle">서비스 개선을 위한 의견을 남겨주세요</p>
+          <form onSubmit={submitSuggestion} className="suggestion-form">
+            <input
+              type="text"
+              placeholder="제목"
+              value={suggestionTitle}
+              onChange={e => setSuggestionTitle(e.target.value)}
+              className="suggestion-input"
+              maxLength={100}
+            />
+            <textarea
+              placeholder="내용을 입력해주세요"
+              value={suggestionContent}
+              onChange={e => setSuggestionContent(e.target.value)}
+              className="suggestion-textarea"
+              rows={5}
+            />
+            <button
+              type="submit"
+              className="btn-save-interests"
+              disabled={suggestionStatus === 'submitting' || !suggestionTitle.trim() || !suggestionContent.trim()}
+            >
+              {suggestionStatus === 'submitting' ? '제출 중...' : suggestionStatus === 'submitted' ? '✓ 제출됨' : '제출'}
+            </button>
+            {suggestionStatus === 'error' && <p className="suggestion-error">제출에 실패했습니다. 다시 시도해주세요.</p>}
+          </form>
         </section>
 
         <div className="mypage-actions">
