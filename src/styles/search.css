@@ -15,6 +15,7 @@
 }
 
 .search-page-header-top {
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
@@ -26,6 +27,10 @@
 }
 
 .search-page-header-top .category-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  flex: none;
   justify-content: center;
 }
 
