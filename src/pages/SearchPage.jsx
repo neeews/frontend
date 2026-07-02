@@ -46,19 +46,33 @@ export default function SearchPage() {
 
   const filterRef = useRef(null)
 
-  useEffect(() => {
+  // URL의 q/filter가 바뀌면 입력창·필터 표시를 동기화 (렌더 중 조정, effect 아님)
+  const searchKey = `${q}|${filterFromUrl}`
+  const [prevSearchKey, setPrevSearchKey] = useState(searchKey)
+  if (searchKey !== prevSearchKey) {
+    setPrevSearchKey(searchKey)
     setInputValue(q)
-    const f = searchParams.get('filter') ?? ''
-    setActiveFilter(f)
-    if (!q.trim()) { setArticles([]); return }
-    setIsLoading(true)
-    articlesApi.search(q, f)
-      .then(data => {
+    setActiveFilter(filterFromUrl)
+    if (!q.trim()) setArticles([])
+  }
+
+  useEffect(() => {
+    if (!q.trim()) return
+    let cancelled = false
+    ;(async () => {
+      setIsLoading(true)
+      try {
+        const data = await articlesApi.search(q, filterFromUrl)
+        if (cancelled) return
         setArticles(data?.articles ?? [])
         setTotal(data?.total ?? 0)
-      })
-      .catch(() => setArticles([]))
-      .finally(() => setIsLoading(false))
+      } catch {
+        if (!cancelled) setArticles([])
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
+    })()
+    return () => { cancelled = true }
   }, [q, filterFromUrl])
 
   useEffect(() => {
