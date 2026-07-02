@@ -25,6 +25,10 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
+.search-page-header-top .category-nav {
+  justify-content: center;
+}
+
 .search-page-header-inner {
   max-width: 800px;
   margin: 0 auto;

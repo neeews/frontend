@@ -26,6 +26,10 @@
   gap: 32px;
 }
 
+.header-inner .category-nav {
+  justify-content: center;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
