@@ -59,10 +59,6 @@ export default function MainPage() {
     navigate('/')
   }
 
-  const tickerText = breakingNews.length > 0
-    ? breakingNews.map(a => a.title).join(' · ')
-    : '최신 뉴스를 불러오는 중...'
-
   const featured = hotArticles[0]
   const subArticles = hotArticles.slice(1, 3)
   const listArticles = hotArticles.slice(3, 6)
@@ -102,7 +98,20 @@ export default function MainPage() {
       <div className="ticker-bar">
         <span className="ticker-label">속보</span>
         <div className="ticker-track">
-          <span key={tickerText}>{tickerText}</span>
+          <div className="ticker-content" key={breakingNews.map(a => a.id).join(',') || 'empty'}>
+            {breakingNews.length > 0 ? (
+              breakingNews.map((a, i) => (
+                <span className="ticker-item-wrap" key={a.id}>
+                  <span className="ticker-item" onClick={() => navigate(`/articles/${a.id}`)}>
+                    {a.title}
+                  </span>
+                  {i < breakingNews.length - 1 && <span className="ticker-sep">·</span>}
+                </span>
+              ))
+            ) : (
+              <span>최신 뉴스를 불러오는 중...</span>
+            )}
+          </div>
         </div>
       </div>
 

@@ -174,12 +174,25 @@
   padding-left: 16px;
 }
 
-.ticker-track span {
+.ticker-content {
   display: inline-block;
   white-space: nowrap;
   font-size: 13px;
   font-weight: 500;
   animation: ticker-scroll 24s linear infinite;
+}
+
+.ticker-item {
+  cursor: pointer;
+}
+
+.ticker-item:hover {
+  text-decoration: underline;
+}
+
+.ticker-sep {
+  opacity: 0.6;
+  padding: 0 10px;
 }
 
 @keyframes ticker-scroll {
