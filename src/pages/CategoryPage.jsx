@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
+import { useReadArticles } from '../hooks/useReadArticles'
 import { timeAgo } from '../utils/time'
 import '../styles/brand.css'
 import '../styles/category.css'
@@ -18,6 +19,7 @@ const categoryColor = {
 export default function CategoryPage() {
   const { name } = useParams()
   const navigate = useNavigate()
+  const { isRead } = useReadArticles()
   const [articles, setArticles] = useState([])
   const [sort, setSort] = useState('latest')
   const [page, setPage] = useState(1)
@@ -111,7 +113,9 @@ export default function CategoryPage() {
 
         {!isLoading && articles.length > 0 && (
           <div className="cat-article-grid">
-            {articles.map(a => (
+            {articles.map(a => {
+              const read = a.isRead || isRead(a.id)
+              return (
               <div
                 key={a.id}
                 className="cat-article-card"
@@ -126,15 +130,16 @@ export default function CategoryPage() {
                       {a.category}
                     </span>
                   )}
-                  <p className={`cat-card-title${a.isRead ? ' title-read' : ''}`}>{a.title}</p>
+                  <p className={`cat-card-title${read ? ' title-read' : ''}`}>{a.title}</p>
                   <div className="cat-card-byline">
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
-                    {a.isRead && <span className="read-badge">읽음</span>}
+                    {read && <span className="read-badge">읽음</span>}
                   </div>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
 

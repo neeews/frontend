@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, useNavigate, Link } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
+import { useReadArticles } from '../hooks/useReadArticles'
 import { timeAgo } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
 import '../styles/brand.css'
@@ -34,6 +35,7 @@ export default function SearchPage() {
   const q = searchParams.get('q') ?? ''
   const filterFromUrl = searchParams.get('filter') ?? ''
   const navigate = useNavigate()
+  const { isRead } = useReadArticles()
 
   const [inputValue, setInputValue] = useState(q)
   const [activeFilter, setActiveFilter] = useState(filterFromUrl)
@@ -266,7 +268,9 @@ export default function SearchPage() {
 
         {!isLoading && articles.length > 0 && (
           <div className="search-result-list">
-            {articles.map(a => (
+            {articles.map(a => {
+              const read = a.isRead || isRead(a.id)
+              return (
               <div
                 key={a.id}
                 className="search-result-item"
@@ -284,10 +288,10 @@ export default function SearchPage() {
                     )}
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
-                    {a.isRead && <span className="read-badge">읽음</span>}
+                    {read && <span className="read-badge">읽음</span>}
                   </div>
                   <h3
-                    className={`search-result-title${a.isRead ? ' title-read' : ''}`}
+                    className={`search-result-title${read ? ' title-read' : ''}`}
                     dangerouslySetInnerHTML={{ __html: highlight(a.title, q) }}
                   />
                   {a.summary && (
@@ -298,7 +302,8 @@ export default function SearchPage() {
                   )}
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

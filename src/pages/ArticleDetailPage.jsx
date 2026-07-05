@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
 import { useBookmark } from '../hooks/useBookmark'
+import { useReadArticles } from '../hooks/useReadArticles'
 import CategoryNav from '../components/CategoryNav'
 import '../styles/brand.css'
 import '../styles/article.css'
@@ -39,6 +40,7 @@ export default function ArticleDetailPage() {
     id,
     article?.isBookmarked ?? false
   )
+  const { isRead, markRead } = useReadArticles()
 
   useEffect(() => {
     setIsLoading(true)
@@ -47,10 +49,11 @@ export default function ArticleDetailPage() {
       .then(data => {
         setArticle(data?.article ?? null)
         setRelated(data?.related ?? [])
+        markRead(Number(id))
       })
       .catch(() => setError('기사를 불러올 수 없습니다.'))
       .finally(() => setIsLoading(false))
-  }, [id])
+  }, [id, markRead])
 
   if (isLoading) return <div className="page-loading">불러오는 중...</div>
   if (error || !article) {
@@ -149,7 +152,9 @@ export default function ArticleDetailPage() {
         <section className="related-section">
           <h2>관련 기사</h2>
           <div className="related-list">
-            {related.map(a => (
+            {related.map(a => {
+              const read = a.isRead || isRead(a.id)
+              return (
               <div key={a.id} className="related-item" onClick={() => navigate(`/articles/${a.id}`)}>
                 <div className="related-item-body">
                   <div className="article-byline" style={{ marginBottom: 6 }}>
@@ -163,12 +168,13 @@ export default function ArticleDetailPage() {
                     )}
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
-                    {a.isRead && <span className="read-badge">읽음</span>}
+                    {read && <span className="read-badge">읽음</span>}
                   </div>
-                  <p className={`related-title${a.isRead ? ' title-read' : ''}`}>{a.title}</p>
+                  <p className={`related-title${read ? ' title-read' : ''}`}>{a.title}</p>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         </section>
       )}

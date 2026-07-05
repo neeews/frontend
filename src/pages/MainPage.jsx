@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
+import { useReadArticles } from '../hooks/useReadArticles'
 import { timeAgo } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
 import '../styles/brand.css'
@@ -20,6 +21,7 @@ const categoryColor = {
 export default function MainPage() {
   const navigate = useNavigate()
   const { isLoggedIn, logout } = useAuth()
+  const { isRead } = useReadArticles()
 
   const [activeCategory, setActiveCategory] = useState('전체')
   const [keywords, setKeywords] = useState([])
@@ -189,12 +191,12 @@ export default function MainPage() {
                       )}
                     </div>
                     <div className="featured-content">
-                      <h3 className={`featured-title${featured.isRead ? ' title-read' : ''}`}>{featured.title}</h3>
+                      <h3 className={`featured-title${(featured.isRead || isRead(featured.id)) ? ' title-read' : ''}`}>{featured.title}</h3>
                       {featured.summary && <p className="featured-summary">{featured.summary}</p>}
                       <div className="article-byline">
                         <span className="article-time">{timeAgo(featured.publishedAt)}</span>
                         {featured.source && <span className="article-source">{featured.source}</span>}
-                        {featured.isRead && <span className="read-badge">읽음</span>}
+                        {(featured.isRead || isRead(featured.id)) && <span className="read-badge">읽음</span>}
                       </div>
                     </div>
                   </div>
@@ -217,11 +219,11 @@ export default function MainPage() {
                             )}
                           </div>
                           <div className="sub-content">
-                            <h4 className={`sub-title${article.isRead ? ' title-read' : ''}`}>{article.title}</h4>
+                            <h4 className={`sub-title${(article.isRead || isRead(article.id)) ? ' title-read' : ''}`}>{article.title}</h4>
                             <div className="article-byline">
                               <span className="article-time">{timeAgo(article.publishedAt)}</span>
                               {article.source && <span className="article-source">{article.source}</span>}
-                              {article.isRead && <span className="read-badge">읽음</span>}
+                              {(article.isRead || isRead(article.id)) && <span className="read-badge">읽음</span>}
                             </div>
                           </div>
                         </div>
@@ -252,9 +254,9 @@ export default function MainPage() {
                             )}
                             <span className="article-time">{timeAgo(article.publishedAt)}</span>
                             {article.source && <span className="article-source">{article.source}</span>}
-                            {article.isRead && <span className="read-badge">읽음</span>}
+                            {(article.isRead || isRead(article.id)) && <span className="read-badge">읽음</span>}
                           </div>
-                          <p className={`list-title${article.isRead ? ' title-read' : ''}`}>{article.title}</p>
+                          <p className={`list-title${(article.isRead || isRead(article.id)) ? ' title-read' : ''}`}>{article.title}</p>
                         </div>
                       </div>
                     ))}
@@ -306,11 +308,11 @@ export default function MainPage() {
                         {a.category}
                       </span>
                     )}
-                    <p className={`side-title${a.isRead ? ' title-read' : ''}`}>{a.title}</p>
+                    <p className={`side-title${(a.isRead || isRead(a.id)) ? ' title-read' : ''}`}>{a.title}</p>
                     <div className="article-byline">
                       <span className="article-time">{timeAgo(a.publishedAt)}</span>
                       {a.source && <span className="article-source">{a.source}</span>}
-                      {a.isRead && <span className="read-badge">읽음</span>}
+                      {(a.isRead || isRead(a.id)) && <span className="read-badge">읽음</span>}
                     </div>
                   </div>
                 </div>
