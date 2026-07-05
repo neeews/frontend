@@ -284,9 +284,10 @@ export default function SearchPage() {
                     )}
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
+                    {a.isRead && <span className="read-badge">읽음</span>}
                   </div>
                   <h3
-                    className="search-result-title"
+                    className={`search-result-title${a.isRead ? ' title-read' : ''}`}
                     dangerouslySetInnerHTML={{ __html: highlight(a.title, q) }}
                   />
                   {a.summary && (

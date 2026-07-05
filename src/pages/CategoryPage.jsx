@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
+import '../styles/brand.css'
 import '../styles/category.css'
 
 const categoryColor = {
@@ -125,10 +126,11 @@ export default function CategoryPage() {
                       {a.category}
                     </span>
                   )}
-                  <p className="cat-card-title">{a.title}</p>
+                  <p className={`cat-card-title${a.isRead ? ' title-read' : ''}`}>{a.title}</p>
                   <div className="cat-card-byline">
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
+                    {a.isRead && <span className="read-badge">읽음</span>}
                   </div>
                 </div>
               </div>

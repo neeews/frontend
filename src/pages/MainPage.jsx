@@ -189,11 +189,12 @@ export default function MainPage() {
                       )}
                     </div>
                     <div className="featured-content">
-                      <h3 className="featured-title">{featured.title}</h3>
+                      <h3 className={`featured-title${featured.isRead ? ' title-read' : ''}`}>{featured.title}</h3>
                       {featured.summary && <p className="featured-summary">{featured.summary}</p>}
                       <div className="article-byline">
                         <span className="article-time">{timeAgo(featured.publishedAt)}</span>
                         {featured.source && <span className="article-source">{featured.source}</span>}
+                        {featured.isRead && <span className="read-badge">읽음</span>}
                       </div>
                     </div>
                   </div>
@@ -216,10 +217,11 @@ export default function MainPage() {
                             )}
                           </div>
                           <div className="sub-content">
-                            <h4 className="sub-title">{article.title}</h4>
+                            <h4 className={`sub-title${article.isRead ? ' title-read' : ''}`}>{article.title}</h4>
                             <div className="article-byline">
                               <span className="article-time">{timeAgo(article.publishedAt)}</span>
                               {article.source && <span className="article-source">{article.source}</span>}
+                              {article.isRead && <span className="read-badge">읽음</span>}
                             </div>
                           </div>
                         </div>
@@ -250,8 +252,9 @@ export default function MainPage() {
                             )}
                             <span className="article-time">{timeAgo(article.publishedAt)}</span>
                             {article.source && <span className="article-source">{article.source}</span>}
+                            {article.isRead && <span className="read-badge">읽음</span>}
                           </div>
-                          <p className="list-title">{article.title}</p>
+                          <p className={`list-title${article.isRead ? ' title-read' : ''}`}>{article.title}</p>
                         </div>
                       </div>
                     ))}
@@ -303,10 +306,11 @@ export default function MainPage() {
                         {a.category}
                       </span>
                     )}
-                    <p className="side-title">{a.title}</p>
+                    <p className={`side-title${a.isRead ? ' title-read' : ''}`}>{a.title}</p>
                     <div className="article-byline">
                       <span className="article-time">{timeAgo(a.publishedAt)}</span>
                       {a.source && <span className="article-source">{a.source}</span>}
+                      {a.isRead && <span className="read-badge">읽음</span>}
                     </div>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ import { articlesApi } from '../api/articles'
 import { timeAgo } from '../utils/time'
 import { useBookmark } from '../hooks/useBookmark'
 import CategoryNav from '../components/CategoryNav'
+import '../styles/brand.css'
 import '../styles/article.css'
 
 function parseContent(raw) {
@@ -162,8 +163,9 @@ export default function ArticleDetailPage() {
                     )}
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
+                    {a.isRead && <span className="read-badge">읽음</span>}
                   </div>
-                  <p className="related-title">{a.title}</p>
+                  <p className={`related-title${a.isRead ? ' title-read' : ''}`}>{a.title}</p>
                 </div>
               </div>
             ))}
