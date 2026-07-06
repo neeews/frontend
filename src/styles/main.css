@@ -179,7 +179,7 @@
   white-space: nowrap;
   font-size: 13px;
   font-weight: 500;
-  animation: ticker-scroll 24s linear infinite;
+  animation: ticker-scroll 42s linear infinite;
 }
 
 .ticker-item {
