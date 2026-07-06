@@ -288,7 +288,6 @@ export default function SearchPage() {
                     )}
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
-                    {read && <span className="read-badge">읽음</span>}
                   </div>
                   <h3
                     className={`search-result-title${read ? ' title-read' : ''}`}

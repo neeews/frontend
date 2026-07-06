@@ -196,7 +196,6 @@ export default function MainPage() {
                       <div className="article-byline">
                         <span className="article-time">{timeAgo(featured.publishedAt)}</span>
                         {featured.source && <span className="article-source">{featured.source}</span>}
-                        {(featured.isRead || isRead(featured.id)) && <span className="read-badge">읽음</span>}
                       </div>
                     </div>
                   </div>
@@ -223,7 +222,6 @@ export default function MainPage() {
                             <div className="article-byline">
                               <span className="article-time">{timeAgo(article.publishedAt)}</span>
                               {article.source && <span className="article-source">{article.source}</span>}
-                              {(article.isRead || isRead(article.id)) && <span className="read-badge">읽음</span>}
                             </div>
                           </div>
                         </div>
@@ -254,7 +252,6 @@ export default function MainPage() {
                             )}
                             <span className="article-time">{timeAgo(article.publishedAt)}</span>
                             {article.source && <span className="article-source">{article.source}</span>}
-                            {(article.isRead || isRead(article.id)) && <span className="read-badge">읽음</span>}
                           </div>
                           <p className={`list-title${(article.isRead || isRead(article.id)) ? ' title-read' : ''}`}>{article.title}</p>
                         </div>
@@ -312,7 +309,6 @@ export default function MainPage() {
                     <div className="article-byline">
                       <span className="article-time">{timeAgo(a.publishedAt)}</span>
                       {a.source && <span className="article-source">{a.source}</span>}
-                      {(a.isRead || isRead(a.id)) && <span className="read-badge">읽음</span>}
                     </div>
                   </div>
                 </div>

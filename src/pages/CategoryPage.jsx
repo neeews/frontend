@@ -134,7 +134,6 @@ export default function CategoryPage() {
                   <div className="cat-card-byline">
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
-                    {read && <span className="read-badge">읽음</span>}
                   </div>
                 </div>
               </div>
