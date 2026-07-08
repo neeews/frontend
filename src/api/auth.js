@@ -1,22 +1,8 @@
-const BASE = import.meta.env.VITE_API_BASE_URL ?? ''
+import { BASE, jsonHeaders, parseResponse } from './client'
 
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  })
-  if (!res.ok) {
-    const text = await res.text()
-    let message = res.statusText
-    if (text) {
-      try { message = JSON.parse(text).message ?? message } catch { message = text }
-    }
-    throw new Error(message)
-  }
-  if (res.status === 204) return null
-  const text = await res.text()
-  if (!text) return null
-  try { return JSON.parse(text) } catch { return null }
+  const res = await fetch(`${BASE}${path}`, { headers: jsonHeaders(options), ...options })
+  return parseResponse(res)
 }
 
 export const authApi = {

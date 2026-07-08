@@ -1,15 +1,7 @@
-const BASE = import.meta.env.VITE_API_BASE_URL ?? ''
+import { BASE, authHeaders, parseResponse } from './client'
 
 async function request(path, options = {}, retry = true) {
-  const accessToken = localStorage.getItem('accessToken')
-  const res = await fetch(`${BASE}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      ...options.headers,
-    },
-    ...options,
-  })
+  const res = await fetch(`${BASE}${path}`, { headers: authHeaders(options), ...options })
 
   // 401 → refresh token으로 재발급 → 원래 요청 재시도
   if (res.status === 401 && retry) {
@@ -39,18 +31,7 @@ async function request(path, options = {}, retry = true) {
     throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.')
   }
 
-  if (!res.ok) {
-    const text = await res.text()
-    let message = res.statusText
-    if (text) {
-      try { message = JSON.parse(text).message ?? message } catch { message = text }
-    }
-    throw new Error(message)
-  }
-  if (res.status === 204) return null
-  const text = await res.text()
-  if (!text) return null
-  try { return JSON.parse(text) } catch { return null }
+  return parseResponse(res)
 }
 
 const toList = (data, key) => (Array.isArray(data) ? data : (data?.[key] ?? []))
