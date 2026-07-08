@@ -1,4 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#6366f1"/>
-  <text x="32" y="43" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#ffffff">N!</text>
+  <defs>
+    <clipPath id="edge"><rect width="64" height="64" rx="8"/></clipPath>
+  </defs>
+  <rect width="64" height="64" rx="8" fill="#111827"/>
+  <g clip-path="url(#edge)">
+    <circle cx="60" cy="6" r="13" fill="#dc2626"/>
+  </g>
+  <path d="M13 50 L13 14 L22 14 L22 34 L41 14 L50 14 L50 50 L41 50 L41 30 L22 50 Z" fill="#f5f5f0"/>
 </svg>
