@@ -23,5 +23,5 @@ No test framework is configured.
 
 ## Response
 
-- 모든 응답은 한국어로 한다.
+- 반드시 모든 응답을 한국어로 작성하세요.
 - 절대 push를 하지 않는다
