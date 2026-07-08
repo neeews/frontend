@@ -11,10 +11,21 @@ import '../styles/search.css'
 const CATEGORIES = ['경제', '정치', '사회', 'IT/과학', '연예/문화', '스포츠', '세계']
 const SOURCES = ['연합뉴스', '동아일보', '경향신문', '한겨레', '한국경제', '전자신문', 'ZDnet코리아']
 
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function highlight(text, query) {
-  if (!query || !text) return text ?? ''
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>')
+  if (!text) return ''
+  const safe = escapeHtml(text)
+  if (!query) return safe
+  const escapedQuery = escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return safe.replace(new RegExp(`(${escapedQuery})`, 'gi'), '<mark>$1</mark>')
 }
 
 function loadRecent() {
