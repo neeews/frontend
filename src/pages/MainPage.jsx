@@ -15,21 +15,18 @@ export default function MainPage() {
   const { isRead } = useReadArticles()
 
   const [activeCategory, setActiveCategory] = useState('전체')
-  const [keywords, setKeywords] = useState([])
   const [hotArticles, setHotArticles] = useState([])
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // Initial load: breaking news, keywords, latest
+  // Initial load: breaking news, latest
   useEffect(() => {
     Promise.all([
       articlesApi.getBreaking().catch(() => []),
-      articlesApi.getTrending().catch(() => []),
       articlesApi.getLatest().catch(() => []),
-    ]).then(([breaking, trending, latest]) => {
+    ]).then(([breaking, latest]) => {
       setBreakingNews(breaking)
-      setKeywords(trending)
       setLatestArticles(latest)
     })
   }, [])
@@ -109,43 +106,6 @@ export default function MainPage() {
       </div>
 
       <main className="main-content">
-        {/* Trending keywords */}
-        {keywords.length > 0 && (
-          <section className="keywords-section">
-            <div className="section-header">
-              <h2 className="section-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                  <polyline points="17 6 23 6 23 12" />
-                </svg>
-                오늘의 인기 키워드
-              </h2>
-              <span className="section-date">{new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 기준</span>
-            </div>
-
-            <div className="keywords-grid">
-              {keywords.slice(0, 10).map((kw, i) => (
-                <div
-                  key={kw.rank ?? i}
-                  className="keyword-item"
-                  onClick={() => navigate(`/search?q=${encodeURIComponent(kw.word ?? kw.keyword ?? '')}`)}
-                >
-                  <span className={`kw-rank rank-${(kw.rank ?? i + 1) <= 3 ? 'top' : 'normal'}`}>
-                    {kw.rank ?? i + 1}
-                  </span>
-                  <span className="kw-word">{kw.word ?? kw.keyword}</span>
-                  <span className={`kw-change change-${kw.change ?? 'same'}`}>
-                    {(kw.change === 'up') && '▲'}
-                    {(kw.change === 'down') && '▼'}
-                    {(kw.change === 'same' || !kw.change) && '–'}
-                    {kw.change === 'new' && 'NEW'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Hot issues + side */}
         <div className="content-layout">
           {/* Main hot articles */}

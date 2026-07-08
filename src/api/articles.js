@@ -38,7 +38,6 @@ const toList = (data, key) => (Array.isArray(data) ? data : (data?.[key] ?? []))
 
 export const articlesApi = {
   getBreaking: () => request('/articles/breaking').then(d => toList(d, 'articles')),
-  getTrending: () => request('/keywords/trending').then(d => toList(d, 'keywords')),
   getHot: (category) =>
     category && category !== '전체'
       ? request(`/articles?category=${encodeURIComponent(category)}&sort=popular`).then(d => toList(d, 'articles'))
