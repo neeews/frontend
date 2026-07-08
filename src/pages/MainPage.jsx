@@ -5,18 +5,9 @@ import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
 import { timeAgo } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
+import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
 import '../styles/main.css'
-
-const categoryColor = {
-  '경제': '#10b981',
-  '연예/문화': '#f59e0b',
-  '정치': '#3b82f6',
-  'IT/과학': '#8b5cf6',
-  '스포츠': '#ef4444',
-  '사회': '#64748b',
-  '세계': '#0ea5e9',
-}
 
 export default function MainPage() {
   const navigate = useNavigate()
@@ -185,7 +176,7 @@ export default function MainPage() {
                     <div className="featured-meta">
                       <span className="rank-badge rank-1">1위</span>
                       {featured.category && (
-                        <span className="cat-badge" style={{ background: categoryColor[featured.category] }}>
+                        <span className="cat-badge" style={{ background: CATEGORY_COLOR[featured.category] }}>
                           {featured.category}
                         </span>
                       )}
@@ -212,7 +203,7 @@ export default function MainPage() {
                           <div className="sub-meta">
                             <span className={`rank-badge rank-${idx + 2}`}>{idx + 2}위</span>
                             {article.category && (
-                              <span className="cat-badge" style={{ background: categoryColor[article.category] }}>
+                              <span className="cat-badge" style={{ background: CATEGORY_COLOR[article.category] }}>
                                 {article.category}
                               </span>
                             )}
@@ -245,7 +236,7 @@ export default function MainPage() {
                             {article.category && (
                               <span
                                 className="cat-badge small"
-                                style={{ background: categoryColor[article.category] }}
+                                style={{ background: CATEGORY_COLOR[article.category] }}
                               >
                                 {article.category}
                               </span>
@@ -299,7 +290,7 @@ export default function MainPage() {
                     {a.category && (
                       <span
                         className="cat-badge small"
-                        style={{ background: categoryColor[a.category] }}
+                        style={{ background: CATEGORY_COLOR[a.category] }}
                         onClick={e => { e.stopPropagation(); navigate(`/category/${encodeURIComponent(a.category)}`) }}
                       >
                         {a.category}

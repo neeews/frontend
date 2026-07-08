@@ -5,6 +5,7 @@ import { timeAgo } from '../utils/time'
 import { useBookmark } from '../hooks/useBookmark'
 import { useReadArticles } from '../hooks/useReadArticles'
 import CategoryNav from '../components/CategoryNav'
+import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
 import '../styles/article.css'
 
@@ -17,16 +18,6 @@ function parseContent(raw) {
   const ta = document.createElement('textarea')
   ta.innerHTML = stripped
   return ta.value.split('\n\n').map(p => p.trim()).filter(Boolean)
-}
-
-const categoryColor = {
-  '경제': '#10b981',
-  '연예/문화': '#f59e0b',
-  '정치': '#3b82f6',
-  'IT/과학': '#8b5cf6',
-  '스포츠': '#ef4444',
-  '사회': '#64748b',
-  '세계': '#0ea5e9',
 }
 
 export default function ArticleDetailPage() {
@@ -90,7 +81,7 @@ export default function ArticleDetailPage() {
           {article.category && (
             <span
               className="cat-badge"
-              style={{ background: categoryColor[article.category] ?? '#64748b' }}
+              style={{ background: CATEGORY_COLOR[article.category] ?? '#64748b' }}
             >
               {article.category}
             </span>
@@ -161,7 +152,7 @@ export default function ArticleDetailPage() {
                     {a.category && (
                       <span
                         className="cat-badge small"
-                        style={{ background: categoryColor[a.category] ?? '#64748b' }}
+                        style={{ background: CATEGORY_COLOR[a.category] ?? '#64748b' }}
                       >
                         {a.category}
                       </span>

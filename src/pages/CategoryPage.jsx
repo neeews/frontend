@@ -3,18 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useReadArticles } from '../hooks/useReadArticles'
 import { timeAgo } from '../utils/time'
+import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
 import '../styles/category.css'
-
-const categoryColor = {
-  '경제': '#10b981',
-  '연예/문화': '#f59e0b',
-  '정치': '#3b82f6',
-  'IT/과학': '#8b5cf6',
-  '스포츠': '#ef4444',
-  '사회': '#64748b',
-  '세계': '#0ea5e9',
-}
 
 export default function CategoryPage() {
   const { name } = useParams()
@@ -125,7 +116,7 @@ export default function CategoryPage() {
                   {a.category && (
                     <span
                       className="cat-badge"
-                      style={{ background: categoryColor[a.category] ?? '#64748b' }}
+                      style={{ background: CATEGORY_COLOR[a.category] ?? '#64748b' }}
                     >
                       {a.category}
                     </span>
