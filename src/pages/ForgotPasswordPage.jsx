@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authApi } from '../api/auth'
+import { VERIFY_CODE_DURATION, formatMMSS } from '../utils/time'
 import '../styles/auth.css'
-
-const VERIFY_DURATION = 180
-
-function formatTime(s) {
-  const m = String(Math.floor(s / 60)).padStart(2, '0')
-  const sec = String(s % 60).padStart(2, '0')
-  return `${m}:${sec}`
-}
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -32,7 +25,7 @@ export default function ForgotPasswordPage() {
     setCodeSent(true)
     setCodeVerified(false)
     setVerifyCode('')
-    setTimeLeft(VERIFY_DURATION)
+    setTimeLeft(VERIFY_CODE_DURATION)
     setSentAt(Date.now())
     try {
       await authApi.sendPasswordCode(email)
@@ -142,7 +135,7 @@ export default function ForgotPasswordPage() {
                     확인
                   </button>
                   <span className={`verify-timer${timeLeft === 0 ? ' expired' : ''}`}>
-                    {timeLeft > 0 ? formatTime(timeLeft) : '만료'}
+                    {timeLeft > 0 ? formatMMSS(timeLeft) : '만료'}
                   </span>
                 </div>
                 {codeError && <p className="auth-error">{codeError}</p>}

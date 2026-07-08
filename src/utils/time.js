@@ -8,3 +8,11 @@ export function timeAgo(isoString) {
   if (hr < 24) return `${hr}시간 전`
   return `${Math.floor(hr / 24)}일 전`
 }
+
+export const VERIFY_CODE_DURATION = 180
+
+export function formatMMSS(s) {
+  const m = String(Math.floor(s / 60)).padStart(2, '0')
+  const sec = String(s % 60).padStart(2, '0')
+  return `${m}:${sec}`
+}

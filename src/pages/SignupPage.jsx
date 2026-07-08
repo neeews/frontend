@@ -2,30 +2,9 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authApi } from '../api/auth'
 import { useAuth } from '../context/AuthContext'
+import EyeIcon from '../components/EyeIcon'
+import { VERIFY_CODE_DURATION, formatMMSS } from '../utils/time'
 import '../styles/auth.css'
-
-const VERIFY_DURATION = 180
-
-function EyeIcon({ open }) {
-  return open ? (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  ) : (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-      <line x1="1" y1="1" x2="23" y2="23" />
-    </svg>
-  )
-}
-
-function formatTime(s) {
-  const m = String(Math.floor(s / 60)).padStart(2, '0')
-  const sec = String(s % 60).padStart(2, '0')
-  return `${m}:${sec}`
-}
 
 export default function SignupPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' })
@@ -60,7 +39,7 @@ export default function SignupPage() {
     setEmailSent(true)
     setEmailVerified(false)
     setVerifyCode('')
-    setTimeLeft(VERIFY_DURATION)
+    setTimeLeft(VERIFY_CODE_DURATION)
     setSentAt(Date.now())
     try {
       await authApi.sendEmailCode(form.email)
@@ -189,7 +168,7 @@ export default function SignupPage() {
                     확인
                   </button>
                   <span className={`verify-timer${timeLeft === 0 ? ' expired' : ''}`}>
-                    {timeLeft > 0 ? formatTime(timeLeft) : '만료'}
+                    {timeLeft > 0 ? formatMMSS(timeLeft) : '만료'}
                   </span>
                 </div>
                 {codeError && <p className="auth-error">{codeError}</p>}
