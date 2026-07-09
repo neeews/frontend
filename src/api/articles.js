@@ -51,9 +51,11 @@ export const articlesApi = {
   // returns { article, related }
   getById: (id) => request(`/articles/${id}`),
   // returns { total, articles }
-  search: (q, filter, page = 1) => {
-    const f = filter ? `&filter=${encodeURIComponent(filter)}` : ''
-    return request(`/search?q=${encodeURIComponent(q)}${f}&page=${page}&limit=10`)
+  search: (q, { categories = [], sources = [] } = {}, page = 1) => {
+    const params = new URLSearchParams({ q, page, limit: 10 })
+    categories.forEach(c => params.append('categories', c))
+    sources.forEach(s => params.append('sources', s))
+    return request(`/search?${params.toString()}`)
   },
   addBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'POST' }),
   removeBookmark: (id) => request(`/articles/${id}/bookmark`, { method: 'DELETE' }),

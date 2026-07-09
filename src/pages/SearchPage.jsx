@@ -32,6 +32,11 @@ function loadRecent() {
   try { return JSON.parse(localStorage.getItem('recentSearches') || '[]') } catch { return [] }
 }
 
+function toSearchFilters(filter) {
+  if (!filter) return {}
+  return CATEGORIES.includes(filter) ? { categories: [filter] } : { sources: [filter] }
+}
+
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const q = searchParams.get('q') ?? ''
@@ -66,7 +71,7 @@ export default function SearchPage() {
     ;(async () => {
       setIsLoading(true)
       try {
-        const data = await articlesApi.search(q, filterFromUrl)
+        const data = await articlesApi.search(q, toSearchFilters(filterFromUrl))
         if (cancelled) return
         setArticles(data?.articles ?? [])
         setTotal(data?.total ?? 0)
