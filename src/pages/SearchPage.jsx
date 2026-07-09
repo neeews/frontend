@@ -183,7 +183,11 @@ export default function SearchPage() {
                 <div className="recent-searches">
                   <div className="recent-header">
                     <span className="recent-label">최근 검색어</span>
-                    <button className="recent-clear-all" onClick={clearSearches}>전체 삭제</button>
+                    <button
+                      className="recent-clear-all"
+                      onMouseDown={e => e.preventDefault()}
+                      onClick={clearSearches}
+                    >전체 삭제</button>
                   </div>
                   {recentSearches.map(keyword => (
                     <div key={keyword} className="recent-item" onClick={() => clickRecent(keyword)}>
@@ -193,6 +197,7 @@ export default function SearchPage() {
                       <span className="recent-item-text">{keyword}</span>
                       <button
                         className="recent-remove"
+                        onMouseDown={e => e.preventDefault()}
                         onClick={e => { e.stopPropagation(); removeSearch(keyword) }}
                       >×</button>
                     </div>
