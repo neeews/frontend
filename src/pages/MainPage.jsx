@@ -9,6 +9,9 @@ import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
 import '../styles/main.css'
 
+const TICKER_DURATION = 60 // .ticker-content 애니메이션 duration(초)과 동일하게 유지
+let tickerStartedAt = null // 모듈 스코프: 기사 상세로 이동했다 돌아와도 흘러간 시간을 유지
+
 export default function MainPage() {
   const navigate = useNavigate()
   const { isLoggedIn, logout } = useAuth()
@@ -19,6 +22,11 @@ export default function MainPage() {
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [tickerDelay] = useState(() => {
+    if (tickerStartedAt === null) tickerStartedAt = Date.now()
+    const elapsed = ((Date.now() - tickerStartedAt) / 1000) % TICKER_DURATION
+    return -elapsed
+  })
 
   // Initial load: breaking news, latest
   useEffect(() => {
@@ -88,7 +96,11 @@ export default function MainPage() {
       <div className="ticker-bar">
         <span className="ticker-label">속보</span>
         <div className="ticker-track">
-          <div className="ticker-content" key={breakingNews.map(a => a.id).join(',') || 'empty'}>
+          <div
+            className="ticker-content"
+            key={breakingNews.map(a => a.id).join(',') || 'empty'}
+            style={{ animationDelay: `${tickerDelay}s` }}
+          >
             {breakingNews.length > 0 ? (
               breakingNews.map((a, i) => (
                 <span className="ticker-item-wrap" key={a.id}>
