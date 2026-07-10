@@ -12,16 +12,25 @@ import '../styles/main.css'
 const TICKER_DURATION = 60 // .ticker-content 애니메이션 duration(초)과 동일하게 유지
 let tickerStartedAt = null // 모듈 스코프: 기사 상세로 이동했다 돌아와도 흘러간 시간을 유지
 
+const BLOCK_CATEGORIES = ['정치', '경제', 'IT/과학']
+
+function loadInterests() {
+  try { return JSON.parse(localStorage.getItem('interestCategories') || '[]') } catch { return [] }
+}
+
 export default function MainPage() {
   const navigate = useNavigate()
-  const { isLoggedIn, logout } = useAuth()
+  const { user, isLoggedIn, logout } = useAuth()
   const { isRead } = useReadArticles()
 
   const [activeCategory, setActiveCategory] = useState('전체')
   const [hotArticles, setHotArticles] = useState([])
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
+  const [recommended, setRecommended] = useState([])
+  const [categoryBlocks, setCategoryBlocks] = useState({})
   const [isLoading, setIsLoading] = useState(true)
+  const [interests] = useState(loadInterests)
   const [tickerDelay] = useState(() => {
     if (tickerStartedAt === null) tickerStartedAt = Date.now()
     const elapsed = ((Date.now() - tickerStartedAt) / 1000) % TICKER_DURATION
@@ -36,6 +45,47 @@ export default function MainPage() {
     ]).then(([breaking, latest]) => {
       setBreakingNews(breaking)
       setLatestArticles(latest)
+    })
+  }, [])
+
+  // 관심 카테고리 기반 추천: 각 카테고리 인기 기사를 번갈아 섞어 최대 6개
+  useEffect(() => {
+    if (!isLoggedIn || interests.length === 0) return
+    Promise.all(
+      interests.map(cat =>
+        articlesApi.getByCategory(cat, 'popular', 1)
+          .then(d => d?.articles ?? [])
+          .catch(() => [])
+      )
+    ).then(lists => {
+      const merged = []
+      const seen = new Set()
+      outer: for (let i = 0; lists.some(l => i < l.length); i++) {
+        for (const list of lists) {
+          const a = list[i]
+          if (a && !seen.has(a.id)) {
+            seen.add(a.id)
+            merged.push(a)
+            if (merged.length >= 6) break outer
+          }
+        }
+      }
+      setRecommended(merged)
+    })
+  }, [isLoggedIn, interests])
+
+  // 카테고리별 뉴스 블록
+  useEffect(() => {
+    Promise.all(
+      BLOCK_CATEGORIES.map(cat =>
+        articlesApi.getByCategory(cat, 'latest', 1)
+          .then(d => d?.articles ?? [])
+          .catch(() => [])
+      )
+    ).then(lists => {
+      const map = {}
+      BLOCK_CATEGORIES.forEach((cat, i) => { map[cat] = lists[i].slice(0, 4) })
+      setCategoryBlocks(map)
     })
   }, [])
 
@@ -252,7 +302,7 @@ export default function MainPage() {
               {latestArticles.length === 0 && (
                 <p style={{ color: '#94a3b8', fontSize: 14, padding: '16px 0' }}>최신 기사가 없습니다.</p>
               )}
-              {latestArticles.slice(0, 5).map(a => (
+              {latestArticles.slice(0, 9).map(a => (
                 <div
                   key={a.id}
                   className="side-item"
@@ -277,7 +327,76 @@ export default function MainPage() {
                 </div>
               ))}
             </div>
+            {latestArticles.length > 0 && (
+              <div className="side-more-wrap">
+                <button className="btn-hot-more" onClick={() => navigate('/category/전체')}>
+                  최신 기사 더 보기 →
+                </button>
+              </div>
+            )}
           </aside>
+        </div>
+
+        {/* 관심 카테고리 추천 */}
+        {recommended.length > 0 && (
+          <section className="reco-section">
+            <div className="section-header">
+              <h2 className="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2l2.9 6.26L21 9.27l-4.5 4.38L17.8 20 12 16.77 6.2 20l1.3-6.35L3 9.27l6.1-1.01L12 2z" />
+                </svg>
+                {user?.name ? `${user.name}님을 위한 뉴스` : '나를 위한 뉴스'}
+              </h2>
+              <span className="reco-hint">관심 카테고리 기반 추천</span>
+            </div>
+            <div className="reco-grid">
+              {recommended.map(a => (
+                <div key={a.id} className="reco-card" onClick={() => navigate(`/articles/${a.id}`)}>
+                  <div className="list-meta">
+                    {a.category && (
+                      <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
+                        {a.category}
+                      </span>
+                    )}
+                    <span className="article-time">{timeAgo(a.publishedAt)}</span>
+                  </div>
+                  <p className={`reco-title${(a.isRead || isRead(a.id)) ? ' title-read' : ''}`}>{a.title}</p>
+                  {a.source && <span className="article-source">{a.source}</span>}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 카테고리별 뉴스 블록 */}
+        <div className="cat-blocks">
+          {BLOCK_CATEGORIES.map(cat => (
+            <section key={cat} className="cat-block">
+              <div className="cat-block-header">
+                <h2 className="cat-block-title">
+                  <span className="cat-block-dot" style={{ background: CATEGORY_COLOR[cat] }} />
+                  {cat}
+                </h2>
+                <button className="btn-hot-more" onClick={() => navigate(`/category/${encodeURIComponent(cat)}`)}>
+                  더 보기 →
+                </button>
+              </div>
+              <div className="cat-block-list">
+                {(categoryBlocks[cat] ?? []).map(a => (
+                  <div key={a.id} className="cat-block-item" onClick={() => navigate(`/articles/${a.id}`)}>
+                    <p className={`cat-block-item-title${(a.isRead || isRead(a.id)) ? ' title-read' : ''}`}>{a.title}</p>
+                    <div className="article-byline">
+                      <span className="article-time">{timeAgo(a.publishedAt)}</span>
+                      {a.source && <span className="article-source">{a.source}</span>}
+                    </div>
+                  </div>
+                ))}
+                {(categoryBlocks[cat] ?? []).length === 0 && (
+                  <p className="cat-block-empty">기사가 없습니다.</p>
+                )}
+              </div>
+            </section>
+          ))}
         </div>
       </main>
 
