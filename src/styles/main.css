@@ -45,7 +45,7 @@
 
 .header-login-btn {
   padding: 8px 20px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: #243044;
   color: #fff;
   border-radius: 10px;
   font-size: 14px;
@@ -73,8 +73,8 @@
 }
 
 .header-search-btn:hover {
-  background: #ede9fe;
-  color: #6366f1;
+  background: #e8ebf1;
+  color: #243044;
 }
 
 /* ── Header user menu ── */
@@ -87,8 +87,8 @@
 .header-mypage-btn {
   padding: 8px 16px;
   background: transparent;
-  color: #6366f1;
-  border: 2px solid #6366f1;
+  color: #243044;
+  border: 2px solid #243044;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 700;
@@ -97,7 +97,7 @@
 }
 
 .header-mypage-btn:hover {
-  background: #6366f1;
+  background: #243044;
   color: #fff;
 }
 
@@ -136,7 +136,7 @@
 .btn-hot-more {
   background: none;
   border: none;
-  color: #6366f1;
+  color: #243044;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -148,7 +148,7 @@
 
 /* ── Ticker ── */
 .ticker-bar {
-  background: #6366f1;
+  background: #243044;
   color: #fff;
   display: flex;
   align-items: center;
@@ -230,7 +230,7 @@
 }
 
 .section-title svg {
-  color: #6366f1;
+  color: #243044;
 }
 
 /* ── Content layout ── */
@@ -417,7 +417,7 @@
 .article-source {
   font-size: 12px;
   font-weight: 600;
-  color: #6366f1;
+  color: #4a5b7d;
 }
 
 
@@ -513,8 +513,8 @@
 }
 
 .reco-card:hover {
-  border-color: #c7d2fe;
-  box-shadow: 0 2px 10px rgba(99,102,241,0.08);
+  border-color: #b9c3d4;
+  box-shadow: 0 2px 10px rgba(36, 48, 68, 0.1);
 }
 
 .reco-title {

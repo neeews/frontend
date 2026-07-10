@@ -10,21 +10,15 @@
 .logo-mark {
   width: 34px;
   height: 34px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 900;
-  font-size: 18px;
-  letter-spacing: -1px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(15, 23, 42, 0.18));
 }
 
 .logo-text {
   font-size: 20px;
   font-weight: 800;
-  color: #0f172a;
+  color: #243044;
   letter-spacing: -0.5px;
 }
 

@@ -119,7 +119,7 @@ export default function MainPage() {
       <header className="site-header">
         <div className="header-inner">
           <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
-            <span className="logo-mark">N</span>
+            <img src="/favicon.png" alt="" className="logo-mark" />
             <span className="logo-text">neeews</span>
           </Link>
 

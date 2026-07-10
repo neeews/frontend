@@ -165,7 +165,7 @@ export default function SearchPage() {
       <header className="search-page-header">
         <div className="search-page-header-top">
           <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
-            <span className="logo-mark">N</span>
+            <img src="/favicon.png" alt="" className="logo-mark" />
             <span className="logo-text">neeews</span>
           </Link>
 

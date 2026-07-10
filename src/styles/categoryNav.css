@@ -29,8 +29,8 @@
 }
 
 .cat-btn.active {
-  background: #ede9fe;
-  color: #6366f1;
+  background: #e8ebf1;
+  color: #243044;
 }
 
 /* ── Category row inside a page header (search / article detail pages) ── */
