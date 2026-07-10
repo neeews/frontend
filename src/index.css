@@ -26,6 +26,16 @@ input, button {
   font-family: inherit;
 }
 
+/* 크롬 자동완성 시 파란 배경 제거 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  -webkit-text-fill-color: #0f172a;
+  caret-color: #0f172a;
+  transition: background-color 9999s ease-out;
+}
+
 /* UI 크롬 요소 텍스트 선택 방지 */
 button,
 a,
