@@ -138,18 +138,26 @@ export default function SearchPage() {
     setSearchParams(buildParams(keyword, activeFilter))
   }
 
+  // 필터 변경 시 검색어는 URL의 q가 아니라 입력창 현재 값 기준 —
+  // 입력창을 지운 뒤 필터를 바꿔도 이전 검색어가 되살아나지 않게 한다
+  const applyFilterParams = (filter) => {
+    const trimmed = inputValue.trim()
+    if (trimmed) setSearchParams(buildParams(trimmed, filter))
+    else if (q) setSearchParams(filter ? { filter } : {})
+  }
+
   const applyFilter = (value) => {
     const next = value === activeFilter ? '' : value
     setActiveFilter(next)
     setShowFilterDrop(false)
-    if (q.trim()) setSearchParams(buildParams(q, next))
+    applyFilterParams(next)
   }
 
   const clearFilter = (e) => {
     e.stopPropagation()
     setActiveFilter('')
     setShowFilterDrop(false)
-    if (q.trim()) setSearchParams(buildParams(q, ''))
+    applyFilterParams('')
   }
 
   return (
