@@ -169,7 +169,7 @@ export default function SearchPage() {
             <span className="logo-text">neeews</span>
           </Link>
 
-          <CategoryNav onSelect={cat => navigate(`/category/${encodeURIComponent(cat)}`)} />
+          <CategoryNav onSelect={cat => navigate(cat === '전체' ? '/' : `/?category=${encodeURIComponent(cat)}`)} />
         </div>
 
         <div className="search-page-header-inner">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
@@ -23,7 +23,9 @@ export default function MainPage() {
   const { user, isLoggedIn, logout } = useAuth()
   const { isRead } = useReadArticles()
 
-  const [activeCategory, setActiveCategory] = useState('전체')
+  // URL ?category= 를 단일 소스로 사용 — 검색 등 다른 페이지에서 /?category=정치 로 진입 가능
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeCategory = searchParams.get('category') || '전체'
   const [hotArticles, setHotArticles] = useState([])
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
@@ -99,7 +101,7 @@ export default function MainPage() {
   }, [activeCategory])
 
   const handleCategoryClick = cat => {
-    setActiveCategory(cat)
+    setSearchParams(cat === '전체' ? {} : { category: cat }, { replace: true })
   }
 
   const handleLogout = async () => {
