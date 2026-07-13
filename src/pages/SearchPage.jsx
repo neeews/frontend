@@ -69,16 +69,19 @@ export default function SearchPage() {
     const parsed = parseFilters(filterFromUrl)
     setSelectedCategories(parsed.categories)
     setSelectedSources(parsed.sources)
-    if (!q.trim()) setArticles([])
+    if (!q.trim() && parsed.categories.length === 0 && parsed.sources.length === 0) setArticles([])
   }
 
+  const isSearchActive = Boolean(q.trim()) || selectedCategories.length > 0 || selectedSources.length > 0
+
   useEffect(() => {
-    if (!q.trim()) return
+    const filters = parseFilters(filterFromUrl)
+    if (!q.trim() && filters.categories.length === 0 && filters.sources.length === 0) return
     let cancelled = false
     ;(async () => {
       setIsLoading(true)
       try {
-        const data = await articlesApi.search(q, parseFilters(filterFromUrl))
+        const data = await articlesApi.search(q, filters)
         if (cancelled) return
         setArticles(data?.articles ?? [])
         setTotal(data?.total ?? 0)
@@ -102,7 +105,8 @@ export default function SearchPage() {
   }, [])
 
   const buildParams = (newQ, filter) => {
-    const params = { q: newQ }
+    const params = {}
+    if (newQ) params.q = newQ
     if (filter) params.filter = filter
     return params
   }
@@ -131,6 +135,13 @@ export default function SearchPage() {
 
   const currentFilterStr = () => [...selectedCategories, ...selectedSources].join(',')
 
+  const filterButtonLabel = () => {
+    const all = [...selectedCategories, ...selectedSources]
+    if (all.length === 0) return '필터'
+    if (all.length === 1) return all[0]
+    return `${all[0]} 외 ${all.length - 1}개`
+  }
+
   const submit = e => {
     e.preventDefault()
     const trimmed = inputValue.trim()
@@ -148,11 +159,10 @@ export default function SearchPage() {
   }
 
   // 필터 변경 시 검색어는 URL의 q가 아니라 입력창 현재 값 기준 —
-  // 입력창을 지운 뒤 필터를 바꿔도 이전 검색어가 되살아나지 않게 한다
+  // 입력창을 지운 뒤 필터를 바꿔도 이전 검색어가 되살아나지 않게 한다.
+  // 검색어가 비어 있어도 필터만으로 검색이 가능해야 하므로 항상 반영한다.
   const applyFilterParams = (filter) => {
-    const trimmed = inputValue.trim()
-    if (trimmed) setSearchParams(buildParams(trimmed, filter))
-    else if (q) setSearchParams(filter ? { filter } : {})
+    setSearchParams(buildParams(inputValue.trim(), filter))
   }
 
   const toggleCategory = (cat) => {
@@ -248,7 +258,7 @@ export default function SearchPage() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="4" y1="6" x2="20" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="11" y1="18" x2="13" y2="18" />
                 </svg>
-                <span>{selectedCategories.length + selectedSources.length > 0 ? `필터 ${selectedCategories.length + selectedSources.length}` : '필터'}</span>
+                <span>{filterButtonLabel()}</span>
                 {(selectedCategories.length + selectedSources.length > 0) && (
                   <span className="filter-clear-x" onClick={clearFilter}>×</span>
                 )}
@@ -293,9 +303,9 @@ export default function SearchPage() {
       </header>
 
       <div className="search-content">
-        {q && !isLoading && (
+        {isSearchActive && !isLoading && (
           <p className="search-result-count">
-            <strong>"{q}"</strong>
+            {q && <strong>"{q}"</strong>}
             {[...selectedCategories, ...selectedSources].map(f => (
               <span key={f} className="search-filter-tag">{f}</span>
             ))}
@@ -305,7 +315,7 @@ export default function SearchPage() {
 
         {isLoading && <div className="search-loading">검색 중...</div>}
 
-        {!isLoading && q && articles.length === 0 && (
+        {!isLoading && isSearchActive && articles.length === 0 && (
           <div className="search-empty">
             <div className="search-empty-icon">🔍</div>
             <p>검색 결과가 없습니다.</p>
