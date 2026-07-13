@@ -12,8 +12,6 @@ import '../styles/main.css'
 const TICKER_DURATION = 60 // .ticker-content 애니메이션 duration(초)과 동일하게 유지
 let tickerStartedAt = null // 모듈 스코프: 기사 상세로 이동했다 돌아와도 흘러간 시간을 유지
 
-const BLOCK_CATEGORIES = ['정치', '경제', 'IT/과학']
-
 function loadInterests() {
   try { return JSON.parse(localStorage.getItem('interestCategories') || '[]') } catch { return [] }
 }
@@ -76,20 +74,24 @@ export default function MainPage() {
     })
   }, [isLoggedIn, interests])
 
-  // 카테고리별 뉴스 블록
+  // 카테고리별 뉴스 블록 — 로그인 + 관심 카테고리가 있을 때만 표시
+  const blockCategories = isLoggedIn && interests.length > 0 ? interests : []
+
   useEffect(() => {
+    if (blockCategories.length === 0) return
     Promise.all(
-      BLOCK_CATEGORIES.map(cat =>
+      blockCategories.map(cat =>
         articlesApi.getByCategory(cat, 'latest', 1)
           .then(d => d?.articles ?? [])
           .catch(() => [])
       )
     ).then(lists => {
       const map = {}
-      BLOCK_CATEGORIES.forEach((cat, i) => { map[cat] = lists[i].slice(0, 4) })
+      blockCategories.forEach((cat, i) => { map[cat] = lists[i].slice(0, 4) })
       setCategoryBlocks(map)
     })
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blockCategories.join(',')])
 
   // Load hot articles when category changes
   useEffect(() => {
@@ -371,8 +373,27 @@ export default function MainPage() {
         )}
 
         {/* 카테고리별 뉴스 블록 */}
+        {blockCategories.length === 0 && (
+          <section className="cat-blocks-placeholder">
+            {isLoggedIn ? (
+              <>
+                <p className="cat-blocks-placeholder-text">설정된 관심 카테고리가 없습니다.</p>
+                <button className="btn-hot-more" onClick={() => navigate('/mypage')}>
+                  마이페이지에서 설정하기 →
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="cat-blocks-placeholder-text">로그인하면 관심 카테고리별 뉴스를 볼 수 있어요.</p>
+                <button className="btn-hot-more" onClick={() => navigate('/login')}>
+                  로그인하기 →
+                </button>
+              </>
+            )}
+          </section>
+        )}
         <div className="cat-blocks">
-          {BLOCK_CATEGORIES.map(cat => (
+          {blockCategories.map(cat => (
             <section key={cat} className="cat-block">
               <div className="cat-block-header">
                 <h2 className="cat-block-title">

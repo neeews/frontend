@@ -604,6 +604,20 @@
   font-size: 13px;
 }
 
+.cat-blocks-placeholder {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.cat-blocks-placeholder-text {
+  color: #94a3b8;
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+
 /* ── Footer ── */
 .site-footer {
   text-align: center;
