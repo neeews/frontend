@@ -130,7 +130,26 @@
 /* ── Hot more button ── */
 .hot-more-wrap {
   margin-top: 16px;
-  text-align: right;
+}
+
+/* 섹션 하단 '더 보기'는 전체 폭 고스트 버튼으로 표시 */
+.hot-more-wrap .btn-hot-more,
+.side-more-wrap .btn-hot-more {
+  display: block;
+  width: 100%;
+  padding: 11px 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.hot-more-wrap .btn-hot-more:hover,
+.side-more-wrap .btn-hot-more:hover {
+  opacity: 1;
+  background: #eef2f7;
+  border-color: #cbd5e1;
 }
 
 .btn-hot-more {
@@ -471,8 +490,8 @@
 }
 
 .side-more-wrap {
-  margin-top: 8px;
-  text-align: right;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid #f1f5f9;
 }
 
