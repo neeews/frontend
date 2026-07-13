@@ -3,8 +3,9 @@ import { BASE, authHeaders, parseResponse } from './client'
 async function request(path, options = {}, retry = true) {
   const res = await fetch(`${BASE}${path}`, { headers: authHeaders(options), ...options })
 
-  // 401 → refresh token으로 재발급 → 원래 요청 재시도
-  if (res.status === 401 && retry) {
+  // 401/403 → refresh token으로 재발급 → 원래 요청 재시도
+  // (백엔드 Spring Security가 인증 만료 시 401이 아닌 403을 반환함)
+  if ((res.status === 401 || res.status === 403) && retry) {
     const refreshToken = localStorage.getItem('refreshToken')
     if (refreshToken) {
       try {
