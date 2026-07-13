@@ -173,7 +173,12 @@ export default function SearchPage() {
         </div>
 
         <div className="search-page-header-inner">
-          <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로</button>
+          <button className="back-btn" onClick={() => navigate(-1)} aria-label="뒤로 가기">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            뒤로
+          </button>
 
           <form className="search-form" onSubmit={submit}>
             {/* 검색 입력 + 최근 검색어 드롭다운 */}
