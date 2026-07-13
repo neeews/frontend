@@ -18,7 +18,7 @@ function loadInterests() {
 
 export default function MainPage() {
   const navigate = useNavigate()
-  const { user, isLoggedIn, logout } = useAuth()
+  const { isLoggedIn, logout } = useAuth()
   const { isRead } = useReadArticles()
 
   // URL ?category= 를 단일 소스로 사용 — 검색 등 다른 페이지에서 /?category=정치 로 진입 가능
@@ -27,7 +27,6 @@ export default function MainPage() {
   const [hotArticles, setHotArticles] = useState([])
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
-  const [recommended, setRecommended] = useState([])
   const [categoryBlocks, setCategoryBlocks] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [interests] = useState(loadInterests)
@@ -47,32 +46,6 @@ export default function MainPage() {
       setLatestArticles(latest)
     })
   }, [])
-
-  // 관심 카테고리 기반 추천: 각 카테고리 인기 기사를 번갈아 섞어 최대 6개
-  useEffect(() => {
-    if (!isLoggedIn || interests.length === 0) return
-    Promise.all(
-      interests.map(cat =>
-        articlesApi.getByCategory(cat, 'popular', 1)
-          .then(d => d?.articles ?? [])
-          .catch(() => [])
-      )
-    ).then(lists => {
-      const merged = []
-      const seen = new Set()
-      outer: for (let i = 0; lists.some(l => i < l.length); i++) {
-        for (const list of lists) {
-          const a = list[i]
-          if (a && !seen.has(a.id)) {
-            seen.add(a.id)
-            merged.push(a)
-            if (merged.length >= 6) break outer
-          }
-        }
-      }
-      setRecommended(merged)
-    })
-  }, [isLoggedIn, interests])
 
   // 카테고리별 뉴스 블록 — 로그인 + 관심 카테고리가 있을 때만 표시
   const blockCategories = isLoggedIn && interests.length > 0 ? interests : []
@@ -340,37 +313,6 @@ export default function MainPage() {
             )}
           </aside>
         </div>
-
-        {/* 관심 카테고리 추천 */}
-        {recommended.length > 0 && (
-          <section className="reco-section">
-            <div className="section-header">
-              <h2 className="section-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2l2.9 6.26L21 9.27l-4.5 4.38L17.8 20 12 16.77 6.2 20l1.3-6.35L3 9.27l6.1-1.01L12 2z" />
-                </svg>
-                {user?.name ? `${user.name}님을 위한 뉴스` : '나를 위한 뉴스'}
-              </h2>
-              <span className="reco-hint">관심 카테고리 기반 추천</span>
-            </div>
-            <div className="reco-grid">
-              {recommended.map(a => (
-                <div key={a.id} className="reco-card" onClick={() => navigate(`/articles/${a.id}`)}>
-                  <div className="list-meta">
-                    {a.category && (
-                      <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
-                        {a.category}
-                      </span>
-                    )}
-                    <span className="article-time">{timeAgo(a.publishedAt)}</span>
-                  </div>
-                  <p className={`reco-title${(a.isRead || isRead(a.id)) ? ' title-read' : ''}`}>{a.title}</p>
-                  {a.source && <span className="article-source">{a.source}</span>}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* 카테고리별 뉴스 블록 */}
         {blockCategories.length === 0 && (
