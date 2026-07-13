@@ -1,15 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
+import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
 import { timeAgo } from '../utils/time'
+import CategoryNav from '../components/CategoryNav'
 import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
+import '../styles/main.css'
 import '../styles/category.css'
 
 export default function CategoryPage() {
   const { name } = useParams()
   const navigate = useNavigate()
+  const { isLoggedIn, logout } = useAuth()
   const { isRead } = useReadArticles()
   const [articles, setArticles] = useState([])
   const [sort, setSort] = useState('latest')
@@ -78,8 +82,44 @@ export default function CategoryPage() {
     if (rect.top <= window.innerHeight + 200) loadMore()
   }, [isLoading, hasMore, loadMore])
 
+  const handleLogout = async () => {
+    await logout()
+    navigate('/')
+  }
+
   return (
     <div className="category-page">
+      <header className="site-header">
+        <div className="header-inner">
+          <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
+            <img src="/favicon.png" alt="" className="logo-mark" />
+            <span className="logo-text">neeews</span>
+          </Link>
+
+          <CategoryNav
+            activeCategory={name}
+            onSelect={cat => navigate(cat === '전체' ? '/' : `/category/${encodeURIComponent(cat)}`)}
+          />
+
+          <div className="header-actions">
+            <button className="header-search-btn" onClick={() => navigate('/search')} aria-label="검색">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+            {isLoggedIn ? (
+              <div className="header-user-menu">
+                <Link to="/mypage" className="header-mypage-btn">마이페이지</Link>
+                <button className="header-logout-btn" onClick={handleLogout}>로그아웃</button>
+              </div>
+            ) : (
+              <Link to="/login" className="header-login-btn">로그인</Link>
+            )}
+          </div>
+        </div>
+      </header>
+
       <header className="cat-page-header">
         <div className="cat-page-header-inner">
           <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로</button>
