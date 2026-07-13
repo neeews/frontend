@@ -122,6 +122,7 @@ export default function CategoryPage() {
                     </span>
                   )}
                   <p className={`cat-card-title${read ? ' title-read' : ''}`}>{a.title}</p>
+                  {a.summary && <p className="cat-card-summary">{a.summary}</p>}
                   <div className="cat-card-byline">
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
