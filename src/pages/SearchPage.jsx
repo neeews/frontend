@@ -32,9 +32,13 @@ function loadRecent() {
   try { return JSON.parse(localStorage.getItem('recentSearches') || '[]') } catch { return [] }
 }
 
-function toSearchFilters(filter) {
-  if (!filter) return {}
-  return CATEGORIES.includes(filter) ? { categories: [filter] } : { sources: [filter] }
+function parseFilters(filterStr) {
+  if (!filterStr) return { categories: [], sources: [] }
+  const items = filterStr.split(',').filter(Boolean)
+  return {
+    categories: items.filter(i => CATEGORIES.includes(i)),
+    sources: items.filter(i => SOURCES.includes(i)),
+  }
 }
 
 export default function SearchPage() {
@@ -45,7 +49,8 @@ export default function SearchPage() {
   const { isRead } = useReadArticles()
 
   const [inputValue, setInputValue] = useState(q)
-  const [activeFilter, setActiveFilter] = useState(filterFromUrl)
+  const [selectedCategories, setSelectedCategories] = useState(() => parseFilters(filterFromUrl).categories)
+  const [selectedSources, setSelectedSources] = useState(() => parseFilters(filterFromUrl).sources)
   const [showFilterDrop, setShowFilterDrop] = useState(false)
   const [articles, setArticles] = useState([])
   const [total, setTotal] = useState(0)
@@ -61,7 +66,9 @@ export default function SearchPage() {
   if (searchKey !== prevSearchKey) {
     setPrevSearchKey(searchKey)
     setInputValue(q)
-    setActiveFilter(filterFromUrl)
+    const parsed = parseFilters(filterFromUrl)
+    setSelectedCategories(parsed.categories)
+    setSelectedSources(parsed.sources)
     if (!q.trim()) setArticles([])
   }
 
@@ -71,7 +78,7 @@ export default function SearchPage() {
     ;(async () => {
       setIsLoading(true)
       try {
-        const data = await articlesApi.search(q, toSearchFilters(filterFromUrl))
+        const data = await articlesApi.search(q, parseFilters(filterFromUrl))
         if (cancelled) return
         setArticles(data?.articles ?? [])
         setTotal(data?.total ?? 0)
@@ -122,20 +129,22 @@ export default function SearchPage() {
     setRecentSearches([])
   }
 
+  const currentFilterStr = () => [...selectedCategories, ...selectedSources].join(',')
+
   const submit = e => {
     e.preventDefault()
     const trimmed = inputValue.trim()
     if (!trimmed) return
     saveSearch(trimmed)
     setShowRecent(false)
-    setSearchParams(buildParams(trimmed, activeFilter))
+    setSearchParams(buildParams(trimmed, currentFilterStr()))
   }
 
   const clickRecent = (keyword) => {
     setInputValue(keyword)
     saveSearch(keyword)
     setShowRecent(false)
-    setSearchParams(buildParams(keyword, activeFilter))
+    setSearchParams(buildParams(keyword, currentFilterStr()))
   }
 
   // 필터 변경 시 검색어는 URL의 q가 아니라 입력창 현재 값 기준 —
@@ -146,16 +155,26 @@ export default function SearchPage() {
     else if (q) setSearchParams(filter ? { filter } : {})
   }
 
-  const applyFilter = (value) => {
-    const next = value === activeFilter ? '' : value
-    setActiveFilter(next)
-    setShowFilterDrop(false)
-    applyFilterParams(next)
+  const toggleCategory = (cat) => {
+    const next = selectedCategories.includes(cat)
+      ? selectedCategories.filter(c => c !== cat)
+      : [...selectedCategories, cat]
+    setSelectedCategories(next)
+    applyFilterParams([...next, ...selectedSources].join(','))
+  }
+
+  const toggleSource = (src) => {
+    const next = selectedSources.includes(src)
+      ? selectedSources.filter(s => s !== src)
+      : [...selectedSources, src]
+    setSelectedSources(next)
+    applyFilterParams([...selectedCategories, ...next].join(','))
   }
 
   const clearFilter = (e) => {
     e.stopPropagation()
-    setActiveFilter('')
+    setSelectedCategories([])
+    setSelectedSources([])
     setShowFilterDrop(false)
     applyFilterParams('')
   }
@@ -223,14 +242,14 @@ export default function SearchPage() {
             <div className="filter-drop-wrap" ref={filterRef}>
               <button
                 type="button"
-                className={`filter-drop-btn${activeFilter ? ' active' : ''}`}
+                className={`filter-drop-btn${selectedCategories.length + selectedSources.length > 0 ? ' active' : ''}`}
                 onClick={() => setShowFilterDrop(v => !v)}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="4" y1="6" x2="20" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="11" y1="18" x2="13" y2="18" />
                 </svg>
-                <span>{activeFilter || '필터'}</span>
-                {activeFilter && (
+                <span>{selectedCategories.length + selectedSources.length > 0 ? `필터 ${selectedCategories.length + selectedSources.length}` : '필터'}</span>
+                {(selectedCategories.length + selectedSources.length > 0) && (
                   <span className="filter-clear-x" onClick={clearFilter}>×</span>
                 )}
               </button>
@@ -244,8 +263,8 @@ export default function SearchPage() {
                         <button
                           key={cat}
                           type="button"
-                          className={`filter-chip${activeFilter === cat ? ' active' : ''}`}
-                          onClick={() => applyFilter(cat)}
+                          className={`filter-chip${selectedCategories.includes(cat) ? ' active' : ''}`}
+                          onClick={() => toggleCategory(cat)}
                         >{cat}</button>
                       ))}
                     </div>
@@ -258,8 +277,8 @@ export default function SearchPage() {
                         <button
                           key={src}
                           type="button"
-                          className={`filter-chip${activeFilter === src ? ' active' : ''}`}
-                          onClick={() => applyFilter(src)}
+                          className={`filter-chip${selectedSources.includes(src) ? ' active' : ''}`}
+                          onClick={() => toggleSource(src)}
                         >{src}</button>
                       ))}
                     </div>
@@ -277,7 +296,9 @@ export default function SearchPage() {
         {q && !isLoading && (
           <p className="search-result-count">
             <strong>"{q}"</strong>
-            {activeFilter && <span className="search-filter-tag">{activeFilter}</span>}
+            {[...selectedCategories, ...selectedSources].map(f => (
+              <span key={f} className="search-filter-tag">{f}</span>
+            ))}
             {' '}검색 결과 {total.toLocaleString()}건
           </p>
         )}
