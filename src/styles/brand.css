@@ -25,3 +25,8 @@
 .title-read {
   color: #94a3b8;
 }
+
+/* 아주 좁은 화면에서는 워드마크를 숨겨 헤더 요소가 겹치지 않게 한다 */
+@media (max-width: 480px) {
+  .logo-text { display: none; }
+}

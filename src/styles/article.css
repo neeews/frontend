@@ -322,4 +322,7 @@
   }
   .article-title { font-size: 22px; }
   .article-body { padding: 20px 20px; font-size: 16px; }
+  .article-top-nav-inner { padding: 0 16px; }
+  .header-category-row { padding: 0 16px 10px; }
+  .cat-btn { padding: 6px 10px; font-size: 13px; }
 }

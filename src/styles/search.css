@@ -26,12 +26,15 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
-.search-page-header-top .category-nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  flex: none;
-  justify-content: center;
+/* 메인 헤더와 동일하게, 가운데 절대배치는 여유 있는 폭에서만 */
+@media (min-width: 1100px) {
+  .search-page-header-top .category-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    flex: none;
+    justify-content: center;
+  }
 }
 
 .search-page-header-inner {
@@ -55,6 +58,8 @@
 .search-input-wrap {
   position: relative;
   flex: 1;
+  /* input의 기본 고유 너비 때문에 줄어들지 않고 옆 버튼을 밀어낸다 */
+  min-width: 0;
 }
 
 .search-input {
@@ -429,13 +434,33 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  /* 헤더 상단을 2줄로: 1줄 = 로고, 2줄 = 카테고리 nav */
   .search-page-header-top {
-    gap: 16px;
-    padding: 0 16px;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 16px;
+    gap: 6px 12px;
+  }
+  .search-page-header-top .category-nav {
+    flex: 0 0 100%;
+  }
+  .search-page-header-inner {
+    padding: 10px 16px 14px;
+    gap: 10px;
   }
 }
 
 @media (max-width: 600px) {
   .search-content { padding: 16px; }
   .filter-dropdown { width: 260px; }
+  /* 뒤로 버튼 아래로 검색 폼을 한 줄 전체로 내린다 */
+  .search-page-header-inner {
+    flex-wrap: wrap;
+  }
+  .search-form {
+    flex: 0 0 100%;
+  }
+  .search-submit-btn { padding: 0 14px; }
+  .filter-drop-btn { padding: 0 10px; }
+  .cat-btn { padding: 6px 10px; font-size: 13px; }
 }

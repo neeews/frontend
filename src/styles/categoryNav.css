@@ -4,7 +4,11 @@
   align-items: center;
   gap: 2px;
   flex: 1;
+  /* flex 아이템 기본 min-width:auto 때문에 좁은 화면에서 줄어들지 않고
+     옆 요소를 밀어내며 겹친다 */
+  min-width: 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
