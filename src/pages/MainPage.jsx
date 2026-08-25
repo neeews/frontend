@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
-import { timeAgo } from '../utils/time'
+import { timeAgo, isToday, formatToday } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
 import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
@@ -75,6 +75,12 @@ export default function MainPage() {
       .finally(() => setIsLoading(false))
   }, [activeCategory])
 
+  // 오늘의 뉴스 — 최신 기사 중 오늘 발행된 것만 추림
+  const todayArticles = useMemo(
+    () => latestArticles.filter(a => isToday(a.publishedAt)).slice(0, 5),
+    [latestArticles]
+  )
+
   const handleCategoryClick = cat => {
     setSearchParams(cat === '전체' ? {} : { category: cat }, { replace: true })
   }
@@ -145,6 +151,47 @@ export default function MainPage() {
       </div>
 
       <main className="main-content">
+        {/* 오늘의 뉴스 */}
+        <section className="today-section">
+          <div className="today-header">
+            <h2 className="section-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              오늘의 뉴스
+            </h2>
+            <span className="today-date">{formatToday()}</span>
+          </div>
+
+          {todayArticles.length === 0 ? (
+            <p className="today-empty">오늘 등록된 기사가 아직 없습니다.</p>
+          ) : (
+            <div className="today-list">
+              {todayArticles.map(a => (
+                <div
+                  key={a.id}
+                  className="today-card"
+                  onClick={() => navigate(`/articles/${a.id}`)}
+                >
+                  {a.category && (
+                    <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
+                      {a.category}
+                    </span>
+                  )}
+                  <p className={`today-title${(a.isRead || isRead(a.id)) ? ' title-read' : ''}`}>{a.title}</p>
+                  <div className="article-byline">
+                    <span className="article-time">{timeAgo(a.publishedAt)}</span>
+                    {a.source && <span className="article-source">{a.source}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
         {/* Hot issues + side */}
         <div className="content-layout">
           {/* Main hot articles */}

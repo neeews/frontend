@@ -16,3 +16,18 @@ export function formatMMSS(s) {
   const sec = String(s % 60).padStart(2, '0')
   return `${m}:${sec}`
 }
+
+export function isToday(isoString) {
+  if (!isoString) return false
+  const d = new Date(isoString)
+  if (Number.isNaN(d.getTime())) return false
+  const now = new Date()
+  return d.getFullYear() === now.getFullYear()
+    && d.getMonth() === now.getMonth()
+    && d.getDate() === now.getDate()
+}
+
+export function formatToday(date = new Date()) {
+  const week = ['일', '월', '화', '수', '목', '금', '토']
+  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${week[date.getDay()]})`
+}
