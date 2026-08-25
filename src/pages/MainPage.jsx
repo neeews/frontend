@@ -24,11 +24,11 @@ export default function MainPage() {
   // URL ?category= 를 단일 소스로 사용 — 검색 등 다른 페이지에서 /?category=정치 로 진입 가능
   const [searchParams, setSearchParams] = useSearchParams()
   const activeCategory = searchParams.get('category') || '전체'
-  const [hotArticles, setHotArticles] = useState([])
+  // { category, articles } — 어느 카테고리의 결과인지 함께 담아 로딩 상태를 렌더 중에 파생
+  const [hotData, setHotData] = useState({ category: null, articles: [] })
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
   const [categoryBlocks, setCategoryBlocks] = useState({})
-  const [isLoading, setIsLoading] = useState(true)
   const [interests] = useState(loadInterests)
   const [tickerDelay] = useState(() => {
     if (tickerStartedAt === null) tickerStartedAt = Date.now()
@@ -66,13 +66,17 @@ export default function MainPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockCategories.join(',')])
 
+  // 아직 현재 카테고리의 응답을 받지 못했으면 로딩 중
+  const isLoading = hotData.category !== activeCategory
+  const hotArticles = isLoading ? [] : hotData.articles
+
   // Load hot articles when category changes
   useEffect(() => {
-    setIsLoading(true)
+    let cancelled = false // 카테고리를 빠르게 바꿀 때 늦게 도착한 이전 응답이 덮어쓰지 않도록
     articlesApi.getHot(activeCategory)
-      .then(data => setHotArticles(data))
-      .catch(() => setHotArticles([]))
-      .finally(() => setIsLoading(false))
+      .then(articles => { if (!cancelled) setHotData({ category: activeCategory, articles }) })
+      .catch(() => { if (!cancelled) setHotData({ category: activeCategory, articles: [] }) })
+    return () => { cancelled = true }
   }, [activeCategory])
 
   // 오늘의 뉴스 — 최신 기사 중 오늘 발행된 것만 추림
