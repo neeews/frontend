@@ -44,6 +44,8 @@ export const articlesApi = {
       ? request(`/articles?category=${encodeURIComponent(category)}&sort=popular`).then(d => toList(d, 'articles'))
       : request('/articles/hot').then(d => toList(d, 'articles')),
   getLatest: () => request('/articles/latest').then(d => toList(d, 'articles')),
+  // AI 요약이 있는 기사 최신 5건 — summary에 aiSummary가 그대로 담겨 온다
+  getTodaySummaries: () => request('/articles/today').then(d => toList(d, 'articles')),
   // returns { articles, total, page }
   getByCategory: (category, sort = 'latest', page = 1) =>
     category && category !== '전체'

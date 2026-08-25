@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
-import { timeAgo, isToday, formatToday } from '../utils/time'
+import { timeAgo, formatToday } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
 import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
@@ -29,6 +29,7 @@ export default function MainPage() {
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
   const [categoryBlocks, setCategoryBlocks] = useState({})
+  const [todaySummaries, setTodaySummaries] = useState(null) // null = 로딩 중
   const [interests] = useState(loadInterests)
   const [tickerDelay] = useState(() => {
     if (tickerStartedAt === null) tickerStartedAt = Date.now()
@@ -41,9 +42,11 @@ export default function MainPage() {
     Promise.all([
       articlesApi.getBreaking().catch(() => []),
       articlesApi.getLatest().catch(() => []),
-    ]).then(([breaking, latest]) => {
+      articlesApi.getTodaySummaries().catch(() => []),
+    ]).then(([breaking, latest, summaries]) => {
       setBreakingNews(breaking)
       setLatestArticles(latest)
+      setTodaySummaries(summaries)
     })
   }, [])
 
@@ -78,12 +81,6 @@ export default function MainPage() {
       .catch(() => { if (!cancelled) setHotData({ category: activeCategory, articles: [] }) })
     return () => { cancelled = true }
   }, [activeCategory])
-
-  // 오늘의 뉴스 — 최신 기사 중 오늘 발행된 것만 추림
-  const todayArticles = useMemo(
-    () => latestArticles.filter(a => isToday(a.publishedAt)).slice(0, 5),
-    [latestArticles]
-  )
 
   const handleCategoryClick = cat => {
     setSearchParams(cat === '전체' ? {} : { category: cat }, { replace: true })
@@ -155,7 +152,7 @@ export default function MainPage() {
       </div>
 
       <main className="main-content">
-        {/* 오늘의 뉴스 */}
+        {/* 오늘의 뉴스 — AI가 요약한 기사 */}
         <section className="today-section">
           <div className="today-header">
             <h2 className="section-title">
@@ -166,31 +163,37 @@ export default function MainPage() {
                 <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
               오늘의 뉴스
+              <span className="today-ai-tag">AI 요약</span>
             </h2>
             <span className="today-date">{formatToday()}</span>
           </div>
 
-          {todayArticles.length === 0 ? (
-            <p className="today-empty">오늘 등록된 기사가 아직 없습니다.</p>
-          ) : (
+          {todaySummaries === null && <p className="today-empty">요약을 불러오는 중...</p>}
+
+          {todaySummaries?.length === 0 && (
+            <p className="today-empty">아직 요약된 기사가 없습니다.</p>
+          )}
+
+          {todaySummaries?.length > 0 && (
             <div className="today-list">
-              {todayArticles.map(a => (
-                <div
+              {todaySummaries.map(a => (
+                <article
                   key={a.id}
                   className="today-card"
                   onClick={() => navigate(`/articles/${a.id}`)}
                 >
-                  {a.category && (
-                    <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
-                      {a.category}
-                    </span>
-                  )}
-                  <p className={`today-title${(a.isRead || isRead(a.id)) ? ' title-read' : ''}`}>{a.title}</p>
-                  <div className="article-byline">
+                  <div className="today-card-head">
+                    {a.category && (
+                      <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
+                        {a.category}
+                      </span>
+                    )}
                     <span className="article-time">{timeAgo(a.publishedAt)}</span>
                     {a.source && <span className="article-source">{a.source}</span>}
                   </div>
-                </div>
+                  <h3 className={`today-title${isRead(a.id) ? ' title-read' : ''}`}>{a.title}</h3>
+                  {a.summary && <p className="today-summary">{a.summary}</p>}
+                </article>
               ))}
             </div>
           )}
