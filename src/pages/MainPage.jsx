@@ -30,6 +30,7 @@ export default function MainPage() {
   const [breakingNews, setBreakingNews] = useState([])
   const [categoryBlocks, setCategoryBlocks] = useState({})
   const [todaySummaries, setTodaySummaries] = useState(null) // null = 로딩 중
+  const [openSummaryId, setOpenSummaryId] = useState(null) // 펼쳐진 요약 카드 (한 번에 하나)
   const [interests] = useState(loadInterests)
   const [tickerDelay] = useState(() => {
     if (tickerStartedAt === null) tickerStartedAt = Date.now()
@@ -176,25 +177,52 @@ export default function MainPage() {
 
           {todaySummaries?.length > 0 && (
             <div className="today-list">
-              {todaySummaries.map(a => (
-                <article
-                  key={a.id}
-                  className="today-card"
-                  onClick={() => navigate(`/articles/${a.id}`)}
-                >
-                  <div className="today-card-head">
-                    {a.category && (
-                      <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
-                        {a.category}
+              {todaySummaries.map(a => {
+                const open = openSummaryId === a.id
+                return (
+                  <article key={a.id} className={`today-card${open ? ' is-open' : ''}`}>
+                    <button
+                      type="button"
+                      className="today-card-btn"
+                      aria-expanded={open}
+                      aria-controls={`today-summary-${a.id}`}
+                      onClick={() => setOpenSummaryId(open ? null : a.id)}
+                    >
+                      <span className="today-card-head">
+                        {a.category && (
+                          <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
+                            {a.category}
+                          </span>
+                        )}
+                        <span className="article-time">{timeAgo(a.publishedAt)}</span>
+                        {a.source && <span className="article-source">{a.source}</span>}
                       </span>
-                    )}
-                    <span className="article-time">{timeAgo(a.publishedAt)}</span>
-                    {a.source && <span className="article-source">{a.source}</span>}
-                  </div>
-                  <h3 className={`today-title${isRead(a.id) ? ' title-read' : ''}`}>{a.title}</h3>
-                  {a.summary && <p className="today-summary">{a.summary}</p>}
-                </article>
-              ))}
+                      <span className={`today-title${isRead(a.id) ? ' title-read' : ''}`}>{a.title}</span>
+                      <svg
+                        className="today-chevron"
+                        width="18" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" strokeWidth="2.5"
+                        strokeLinecap="round" strokeLinejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+
+                    <div className="today-panel" id={`today-summary-${a.id}`}>
+                      <div className="today-panel-inner">
+                        <p className="today-summary">{a.summary || '요약이 없습니다.'}</p>
+                        <button
+                          type="button"
+                          className="btn-hot-more"
+                          onClick={() => navigate(`/articles/${a.id}`)}
+                        >
+                          기사 전문 보기 →
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           )}
         </section>
