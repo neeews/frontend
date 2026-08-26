@@ -24,17 +24,14 @@
   height: 60px;
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 20px;
 }
 
-/* 카테고리 nav 가운데 절대배치는 여유 있는 폭에서만.
-   좁아지면 로고·헤더 버튼과 겹치므로 아래에서 일반 flex 아이템으로 되돌린다 */
+/* nav를 화면 중앙에 절대배치하면 헤더 버튼이 늘어날 때 그 위로 겹친다.
+   일반 flex 아이템으로 두고 남는 공간 안에서만 가운데 정렬한다.
+   (좁아지면 flex-start + 가로 스크롤로 자연히 되돌아간다) */
 @media (min-width: 1100px) {
   .header-inner .category-nav {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    flex: none;
     justify-content: center;
   }
 }
@@ -42,7 +39,7 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   flex-shrink: 0;
   margin-left: auto;
 }
