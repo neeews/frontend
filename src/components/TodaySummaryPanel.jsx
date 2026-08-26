@@ -22,21 +22,30 @@ export default function TodaySummaryPanel({ open, onToggle }) {
     return () => { cancelled = true }
   }, [open, summaries])
 
-  // 열려 있는 동안 Esc로 닫는다
+  // 열려 있는 동안 Esc로 닫고 배경 스크롤을 막는다
   useEffect(() => {
     if (!open) return
     const onKeyDown = e => { if (e.key === 'Escape') onToggle() }
     document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = prevOverflow
+    }
   }, [open, onToggle])
 
   return (
     <>
-      {open && <div className="today-backdrop" onClick={onToggle} />}
-
-      <div className="today-fab-wrap">
-        {open && (
-          <div className="today-panel-pop" role="dialog" aria-label="오늘의 뉴스 AI 요약">
+      {open && (
+        <div className="today-backdrop" onClick={onToggle}>
+          <div
+            className="today-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label="오늘의 뉴스 AI 요약"
+            onClick={e => e.stopPropagation()}
+          >
             <header className="today-pop-head">
               <div>
                 <h2 className="today-pop-title">
@@ -45,6 +54,12 @@ export default function TodaySummaryPanel({ open, onToggle }) {
                 </h2>
                 <p className="today-pop-date">{formatToday()}</p>
               </div>
+              <button type="button" className="today-close-btn" onClick={onToggle} aria-label="닫기">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
             </header>
 
             <div className="today-pop-body">
@@ -106,8 +121,10 @@ export default function TodaySummaryPanel({ open, onToggle }) {
               )}
             </div>
           </div>
-        )}
+        </div>
+      )}
 
+      <div className="today-fab-wrap">
         <button
           type="button"
           className={`today-fab${open ? ' is-open' : ''}`}

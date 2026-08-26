@@ -40,7 +40,7 @@
   align-items: flex-start;
   gap: 8px;
   width: 100%;
-  padding: 16px 44px 16px 18px;
+  padding: 18px 48px 18px 20px;
   position: relative;
   background: none;
   border: none;
@@ -62,7 +62,7 @@
 }
 
 .today-title {
-  font-size: 15.5px;
+  font-size: 16.5px;
   font-weight: 800;
   color: #0f172a;
   line-height: 1.4;
@@ -103,11 +103,11 @@
 }
 
 .today-card.is-open .today-panel-inner {
-  padding: 0 18px 16px;
+  padding: 0 20px 18px;
 }
 
 .today-summary {
-  font-size: 14px;
+  font-size: 15px;
   color: #475569;
   line-height: 1.7;
   padding-top: 12px;
@@ -168,21 +168,25 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(15, 23, 42, 0.35);
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
   animation: today-fade 0.15s ease;
 }
 
-.today-panel-pop {
-  width: min(420px, calc(100vw - 48px));
-  max-height: min(70vh, 620px);
+.today-dialog {
+  width: min(760px, 100%);
+  max-height: min(86vh, 860px);
   display: flex;
   flex-direction: column;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+  border-radius: 18px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.28);
   overflow: hidden;
-  transform-origin: bottom right;
-  animation: today-rise 0.18s ease;
+  animation: today-rise 0.2s ease;
 }
 
 @keyframes today-fade {
@@ -190,20 +194,44 @@
 }
 
 @keyframes today-rise {
-  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
 }
 
 .today-pop-head {
-  padding: 18px 20px 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 22px 26px 18px;
   border-bottom: 1px solid #e2e8f0;
   flex-shrink: 0;
+}
+
+.today-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 10px;
+  color: #64748b;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.today-close-btn:hover {
+  background: #e8ebf1;
+  color: #243044;
 }
 
 .today-pop-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 800;
   color: #0f172a;
 }
@@ -216,26 +244,24 @@
 }
 
 .today-pop-body {
-  padding: 14px 20px 20px;
+  padding: 18px 26px 26px;
   overflow-y: auto;
 }
 
 /* 좁은 화면에서는 아래에서 올라오는 시트로 */
 @media (max-width: 640px) {
-  .today-fab-wrap {
-    right: 16px;
-    bottom: 16px;
-    left: 16px;
-    align-items: stretch;
+  .today-backdrop {
+    padding: 0;
+    align-items: flex-end;
   }
-  .today-panel-pop {
-    width: 100%;
-    max-height: 72vh;
+  .today-dialog {
+    max-height: 88vh;
+    border-radius: 18px 18px 0 0;
   }
-  .today-fab {
-    align-self: flex-end;
-    padding: 13px 18px;
-  }
+  .today-pop-head { padding: 18px 20px 14px; }
+  .today-pop-body { padding: 14px 20px 20px; }
+  .today-fab-wrap { right: 16px; bottom: 16px; }
+  .today-fab { padding: 13px 18px; }
 }
 
 @media (max-width: 400px) {
