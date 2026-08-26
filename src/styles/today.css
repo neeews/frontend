@@ -123,31 +123,66 @@
   font-size: 14px;
 }
 
-/* ── 오늘의 뉴스 모달 ── */
+/* ── 플로팅 버튼 ── */
+.today-fab-wrap {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.today-fab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.today-fab:hover {
+  background: #4338ca;
+  box-shadow: 0 8px 26px rgba(79, 70, 229, 0.45);
+  transform: translateY(-1px);
+}
+
+.today-fab.is-open {
+  background: #334155;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.3);
+}
+
+/* ── 버튼 위로 떠오르는 패널 ── */
 .today-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 100;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(2px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+  z-index: 200;
+  background: rgba(15, 23, 42, 0.35);
   animation: today-fade 0.15s ease;
 }
 
-.today-modal {
-  width: 100%;
-  max-width: 640px;
-  max-height: min(80vh, 720px);
+.today-panel-pop {
+  width: min(420px, calc(100vw - 48px));
+  max-height: min(70vh, 620px);
   display: flex;
   flex-direction: column;
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.22);
   overflow: hidden;
-  animation: today-rise 0.2s ease;
+  transform-origin: bottom right;
+  animation: today-rise 0.18s ease;
 }
 
 @keyframes today-fade {
@@ -155,93 +190,55 @@
 }
 
 @keyframes today-rise {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
 }
 
-.today-modal-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 20px 22px 16px;
+.today-pop-head {
+  padding: 18px 20px 14px;
   border-bottom: 1px solid #e2e8f0;
   flex-shrink: 0;
 }
 
-.today-modal-title {
+.today-pop-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
   color: #0f172a;
 }
 
-.today-modal-date {
+.today-pop-date {
   margin-top: 4px;
   font-size: 13px;
   font-weight: 600;
   color: #64748b;
 }
 
-.today-close-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border: none;
-  background: #f1f5f9;
-  border-radius: 10px;
-  color: #64748b;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
-}
-
-.today-close-btn:hover {
-  background: #e8ebf1;
-  color: #243044;
-}
-
-.today-modal-body {
-  padding: 16px 22px 22px;
+.today-pop-body {
+  padding: 14px 20px 20px;
   overflow-y: auto;
 }
 
-/* ── 헤더의 오늘의 뉴스 버튼 ── */
-.header-today-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: #eef2ff;
-  color: #4f46e5;
-  border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
-}
-
-.header-today-btn:hover {
-  background: #e0e7ff;
-  color: #4338ca;
-}
-
-@media (max-width: 768px) {
-  .today-backdrop { padding: 0; align-items: flex-end; }
-  .today-modal {
-    max-width: none;
-    max-height: 88vh;
-    border-radius: 18px 18px 0 0;
+/* 좁은 화면에서는 아래에서 올라오는 시트로 */
+@media (max-width: 640px) {
+  .today-fab-wrap {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    align-items: stretch;
+  }
+  .today-panel-pop {
+    width: 100%;
+    max-height: 72vh;
+  }
+  .today-fab {
+    align-self: flex-end;
+    padding: 13px 18px;
   }
 }
 
-@media (max-width: 480px) {
-  .header-today-btn { padding: 7px 10px; font-size: 13px; }
-  .header-today-btn .header-today-label { display: none; }
+@media (max-width: 400px) {
+  .today-fab-label { display: none; }
+  .today-fab { padding: 15px; }
 }

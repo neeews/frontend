@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
 import { timeAgo } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
-import TodaySummaryModal from '../components/TodaySummaryModal'
+import TodaySummaryPanel from '../components/TodaySummaryPanel'
 import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
 import '../styles/main.css'
@@ -107,19 +107,6 @@ export default function MainPage() {
           <CategoryNav activeCategory={activeCategory} onSelect={handleCategoryClick} />
 
           <div className="header-actions">
-            <button
-              className="header-today-btn"
-              onClick={() => setIsTodayOpen(true)}
-              aria-label="오늘의 뉴스 AI 요약 보기"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-              <span className="header-today-label">오늘의 뉴스</span>
-            </button>
             <button className="header-search-btn" onClick={() => navigate('/search')} aria-label="검색">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8" />
@@ -384,7 +371,7 @@ export default function MainPage() {
         </div>
       </main>
 
-      <TodaySummaryModal open={isTodayOpen} onClose={() => setIsTodayOpen(false)} />
+      <TodaySummaryPanel open={isTodayOpen} onToggle={() => setIsTodayOpen(v => !v)} />
 
       <footer className="site-footer">
         <p>© 2026 neeews. 모든 뉴스를 한눈에.</p>
