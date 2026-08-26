@@ -3,8 +3,9 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
-import { timeAgo, formatToday } from '../utils/time'
+import { timeAgo } from '../utils/time'
 import CategoryNav from '../components/CategoryNav'
+import TodaySummaryModal from '../components/TodaySummaryModal'
 import { CATEGORY_COLOR } from '../constants/categories'
 import '../styles/brand.css'
 import '../styles/main.css'
@@ -29,8 +30,7 @@ export default function MainPage() {
   const [latestArticles, setLatestArticles] = useState([])
   const [breakingNews, setBreakingNews] = useState([])
   const [categoryBlocks, setCategoryBlocks] = useState({})
-  const [todaySummaries, setTodaySummaries] = useState(null) // null = 로딩 중
-  const [openSummaryId, setOpenSummaryId] = useState(null) // 펼쳐진 요약 카드 (한 번에 하나)
+  const [isTodayOpen, setIsTodayOpen] = useState(false)
   const [interests] = useState(loadInterests)
   const [tickerDelay] = useState(() => {
     if (tickerStartedAt === null) tickerStartedAt = Date.now()
@@ -43,11 +43,9 @@ export default function MainPage() {
     Promise.all([
       articlesApi.getBreaking().catch(() => []),
       articlesApi.getLatest().catch(() => []),
-      articlesApi.getTodaySummaries().catch(() => []),
-    ]).then(([breaking, latest, summaries]) => {
+    ]).then(([breaking, latest]) => {
       setBreakingNews(breaking)
       setLatestArticles(latest)
-      setTodaySummaries(summaries)
     })
   }, [])
 
@@ -109,6 +107,19 @@ export default function MainPage() {
           <CategoryNav activeCategory={activeCategory} onSelect={handleCategoryClick} />
 
           <div className="header-actions">
+            <button
+              className="header-today-btn"
+              onClick={() => setIsTodayOpen(true)}
+              aria-label="오늘의 뉴스 AI 요약 보기"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span className="header-today-label">오늘의 뉴스</span>
+            </button>
             <button className="header-search-btn" onClick={() => navigate('/search')} aria-label="검색">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8" />
@@ -153,80 +164,6 @@ export default function MainPage() {
       </div>
 
       <main className="main-content">
-        {/* 오늘의 뉴스 — AI가 요약한 기사 */}
-        <section className="today-section">
-          <div className="today-header">
-            <h2 className="section-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-              오늘의 뉴스
-              <span className="today-ai-tag">AI 요약</span>
-            </h2>
-            <span className="today-date">{formatToday()}</span>
-          </div>
-
-          {todaySummaries === null && <p className="today-empty">요약을 불러오는 중...</p>}
-
-          {todaySummaries?.length === 0 && (
-            <p className="today-empty">아직 요약된 기사가 없습니다.</p>
-          )}
-
-          {todaySummaries?.length > 0 && (
-            <div className="today-list">
-              {todaySummaries.map(a => {
-                const open = openSummaryId === a.id
-                return (
-                  <article key={a.id} className={`today-card${open ? ' is-open' : ''}`}>
-                    <button
-                      type="button"
-                      className="today-card-btn"
-                      aria-expanded={open}
-                      aria-controls={`today-summary-${a.id}`}
-                      onClick={() => setOpenSummaryId(open ? null : a.id)}
-                    >
-                      <span className="today-card-head">
-                        {a.category && (
-                          <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
-                            {a.category}
-                          </span>
-                        )}
-                        <span className="article-time">{timeAgo(a.publishedAt)}</span>
-                        {a.source && <span className="article-source">{a.source}</span>}
-                      </span>
-                      <span className={`today-title${isRead(a.id) ? ' title-read' : ''}`}>{a.title}</span>
-                      <svg
-                        className="today-chevron"
-                        width="18" height="18" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" strokeWidth="2.5"
-                        strokeLinecap="round" strokeLinejoin="round"
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
-                    </button>
-
-                    <div className="today-panel" id={`today-summary-${a.id}`}>
-                      <div className="today-panel-inner">
-                        <p className="today-summary">{a.summary || '요약이 없습니다.'}</p>
-                        <button
-                          type="button"
-                          className="btn-hot-more"
-                          onClick={() => navigate(`/articles/${a.id}`)}
-                        >
-                          기사 전문 보기 →
-                        </button>
-                      </div>
-                    </div>
-                  </article>
-                )
-              })}
-            </div>
-          )}
-        </section>
-
         {/* Hot issues + side */}
         <div className="content-layout">
           {/* Main hot articles */}
@@ -446,6 +383,8 @@ export default function MainPage() {
           ))}
         </div>
       </main>
+
+      <TodaySummaryModal open={isTodayOpen} onClose={() => setIsTodayOpen(false)} />
 
       <footer className="site-footer">
         <p>© 2026 neeews. 모든 뉴스를 한눈에.</p>

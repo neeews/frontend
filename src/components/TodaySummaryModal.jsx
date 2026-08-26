@@ -1,0 +1,126 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { articlesApi } from '../api/articles'
+import { useReadArticles } from '../hooks/useReadArticles'
+import { timeAgo, formatToday } from '../utils/time'
+import { CATEGORY_COLOR } from '../constants/categories'
+import '../styles/today.css'
+
+export default function TodaySummaryModal({ open, onClose }) {
+  const navigate = useNavigate()
+  const { isRead } = useReadArticles()
+  const [summaries, setSummaries] = useState(null) // null = 아직 안 받아옴
+  const [openId, setOpenId] = useState(null) // 펼쳐진 카드 (한 번에 하나)
+
+  // 처음 열릴 때 한 번만 조회
+  useEffect(() => {
+    if (!open || summaries !== null) return
+    let cancelled = false
+    articlesApi.getTodaySummaries()
+      .then(list => { if (!cancelled) setSummaries(list) })
+      .catch(() => { if (!cancelled) setSummaries([]) })
+    return () => { cancelled = true }
+  }, [open, summaries])
+
+  // 열려 있는 동안 Esc로 닫고 배경 스크롤을 막는다
+  useEffect(() => {
+    if (!open) return
+    const onKeyDown = e => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKeyDown)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [open, onClose])
+
+  if (!open) return null
+
+  return (
+    <div className="today-backdrop" onClick={onClose}>
+      <div
+        className="today-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="today-modal-title"
+        onClick={e => e.stopPropagation()}
+      >
+        <header className="today-modal-head">
+          <div>
+            <h2 className="today-modal-title" id="today-modal-title">
+              오늘의 뉴스
+              <span className="today-ai-tag">AI 요약</span>
+            </h2>
+            <p className="today-modal-date">{formatToday()}</p>
+          </div>
+          <button type="button" className="today-close-btn" onClick={onClose} aria-label="닫기">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </header>
+
+        <div className="today-modal-body">
+          {summaries === null && <p className="today-empty">요약을 불러오는 중...</p>}
+
+          {summaries?.length === 0 && (
+            <p className="today-empty">아직 요약된 기사가 없습니다.</p>
+          )}
+
+          {summaries?.length > 0 && (
+            <div className="today-list">
+              {summaries.map(a => {
+                const isOpen = openId === a.id
+                return (
+                  <article key={a.id} className={`today-card${isOpen ? ' is-open' : ''}`}>
+                    <button
+                      type="button"
+                      className="today-card-btn"
+                      aria-expanded={isOpen}
+                      aria-controls={`today-summary-${a.id}`}
+                      onClick={() => setOpenId(isOpen ? null : a.id)}
+                    >
+                      <span className="today-card-head">
+                        {a.category && (
+                          <span className="cat-badge small" style={{ background: CATEGORY_COLOR[a.category] }}>
+                            {a.category}
+                          </span>
+                        )}
+                        <span className="article-time">{timeAgo(a.publishedAt)}</span>
+                        {a.source && <span className="article-source">{a.source}</span>}
+                      </span>
+                      <span className={`today-title${isRead(a.id) ? ' title-read' : ''}`}>{a.title}</span>
+                      <svg
+                        className="today-chevron"
+                        width="18" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" strokeWidth="2.5"
+                        strokeLinecap="round" strokeLinejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+
+                    <div className="today-panel" id={`today-summary-${a.id}`}>
+                      <div className="today-panel-inner">
+                        <p className="today-summary">{a.summary || '요약이 없습니다.'}</p>
+                        <button
+                          type="button"
+                          className="btn-hot-more"
+                          onClick={() => { onClose(); navigate(`/articles/${a.id}`) }}
+                        >
+                          기사 전문 보기 →
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
