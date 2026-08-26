@@ -12,46 +12,26 @@
 .today-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .today-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
   border: 1px solid #e2e8f0;
   border-left: 3px solid #c7d2fe;
   border-radius: 12px;
-  overflow: hidden;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 .today-card:hover {
+  background: #fafbff;
   border-color: #cbd5e1;
-  border-left-color: #6366f1;
-}
-
-.today-card.is-open {
   border-left-color: #4f46e5;
   box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-}
-
-/* 카드 전체가 요약을 여닫는 버튼 */
-.today-card-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  width: 100%;
-  padding: 18px 48px 18px 20px;
-  position: relative;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-  transition: background 0.15s;
-}
-
-.today-card-btn:hover {
-  background: #fafbff;
 }
 
 .today-card-head {
@@ -66,53 +46,12 @@
   font-weight: 800;
   color: #0f172a;
   line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.today-chevron {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-  color: #94a3b8;
-  transition: transform 0.25s ease, color 0.15s;
-}
-
-.today-card.is-open .today-chevron {
-  transform: translateY(-50%) rotate(180deg);
-  color: #4f46e5;
-}
-
-/* 0fr → 1fr 로 높이를 자연스럽게 여닫는다 */
-.today-panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.25s ease;
-}
-
-.today-card.is-open .today-panel {
-  grid-template-rows: 1fr;
-}
-
-.today-panel-inner {
-  overflow: hidden;
-  min-height: 0;
-}
-
-.today-card.is-open .today-panel-inner {
-  padding: 0 20px 18px;
 }
 
 .today-summary {
   font-size: 15px;
   color: #475569;
   line-height: 1.7;
-  padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
-  margin-bottom: 12px;
   white-space: pre-line;
 }
 
