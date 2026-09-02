@@ -38,7 +38,7 @@
 
 .admin-badge {
   padding: 3px 10px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: #243044;
   color: #fff;
   border-radius: 20px;
   font-size: 11px;
@@ -103,11 +103,11 @@
 
 .admin-nav-item:hover:not(.disabled) {
   background: #f1f5f9;
-  color: #6366f1;
+  color: #243044;
 }
 
 .admin-nav-item.active {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: #243044;
   color: #fff;
 }
 
@@ -238,14 +238,14 @@
 }
 
 .filter-tab.active {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: #243044;
   border-color: transparent;
   color: #fff;
 }
 
 .filter-tab:not(.active):hover {
-  border-color: #6366f1;
-  color: #6366f1;
+  border-color: #243044;
+  color: #243044;
 }
 
 /* ── Suggestion List ── */
@@ -424,7 +424,7 @@
 .btn-retry {
   margin-top: 12px;
   padding: 10px 24px;
-  background: #6366f1;
+  background: #243044;
   color: #fff;
   border: none;
   border-radius: 10px;

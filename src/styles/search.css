@@ -76,8 +76,8 @@
 }
 
 .search-input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+  border-color: #243044;
+  box-shadow: 0 0 0 3px rgba(74, 91, 125, 0.15);
 }
 
 /* ── Filter dropdown trigger ── */
@@ -104,20 +104,20 @@
 }
 
 .filter-drop-btn:hover {
-  border-color: #6366f1;
-  color: #6366f1;
+  border-color: #243044;
+  color: #243044;
 }
 
 .filter-drop-btn.active {
-  background: #ede9fe;
-  border-color: #6366f1;
-  color: #6366f1;
+  background: #eef2f7;
+  border-color: #243044;
+  color: #243044;
 }
 
 .filter-clear-x {
   font-size: 16px;
   line-height: 1;
-  color: #6366f1;
+  color: #243044;
   margin-left: 2px;
   transition: color 0.15s;
 }
@@ -168,12 +168,12 @@
 }
 
 .filter-chip:hover:not(.active) {
-  border-color: #6366f1;
-  color: #6366f1;
+  border-color: #243044;
+  color: #243044;
 }
 
 .filter-chip.active {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: #243044;
   border-color: transparent;
   color: #fff;
 }
@@ -188,7 +188,7 @@
 .search-submit-btn {
   height: 42px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: #243044;
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -226,8 +226,8 @@
 
 .search-filter-tag {
   padding: 2px 10px;
-  background: #ede9fe;
-  color: #6366f1;
+  background: #eef2f7;
+  color: #243044;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
@@ -366,7 +366,7 @@
   background: none;
   border: none;
   font-size: 12px;
-  color: #6366f1;
+  color: #243044;
   cursor: pointer;
   font-weight: 600;
   padding: 0;
@@ -425,9 +425,9 @@
 .search-page-header .back-btn svg { transition: transform 0.15s; }
 
 .search-page-header .back-btn:hover {
-  border-color: #6366f1;
-  color: #6366f1;
-  background: #eef2ff;
+  border-color: #243044;
+  color: #243044;
+  background: #eef2f7;
 }
 
 .search-page-header .back-btn:hover svg { transform: translateX(-2px); }

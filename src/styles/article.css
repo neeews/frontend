@@ -43,7 +43,7 @@
 .nav-logo {
   font-size: 18px;
   font-weight: 800;
-  color: #6366f1;
+  color: #243044;
   text-decoration: none;
   margin-right: auto;
 }
@@ -87,7 +87,7 @@
   height: 320px;
   border-radius: 16px;
   margin-bottom: 28px;
-  background: linear-gradient(135deg, #c7d2fe 0%, #ddd6fe 100%);
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
 }
 
 .article-body {
@@ -127,12 +127,12 @@
 .article-body h4 { font-size: 16px; }
 
 .article-body a {
-  color: #6366f1;
+  color: #243044;
   text-decoration: underline;
   text-underline-offset: 3px;
   word-break: break-all;
 }
-.article-body a:hover { color: #4f46e5; }
+.article-body a:hover { color: #4a5b7d; }
 
 .article-body img {
   max-width: 100%;
@@ -153,10 +153,10 @@
 .article-body li:last-child { margin-bottom: 0; }
 
 .article-body blockquote {
-  border-left: 4px solid #6366f1;
+  border-left: 4px solid #243044;
   margin: 24px 0;
   padding: 14px 20px;
-  background: #f8faff;
+  background: #f8fafc;
   border-radius: 0 8px 8px 0;
   color: #475569;
   font-style: italic;
@@ -211,13 +211,13 @@
 }
 
 .action-btn:hover {
-  border-color: #6366f1;
-  color: #6366f1;
+  border-color: #243044;
+  color: #243044;
 }
 
 .action-btn.bookmark-btn.active {
-  background: #6366f1;
-  border-color: #6366f1;
+  background: #243044;
+  border-color: #243044;
   color: #fff;
 }
 
