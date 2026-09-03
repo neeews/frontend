@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { adminApi } from '../api/admin'
+import LabelingPanel from '../components/LabelingPanel'
 import '../styles/admin.css'
 
 const NAV_ITEMS = [
   { key: 'suggestions', label: '건의함', icon: '💬', available: true },
+  { key: 'labeling', label: '중요도 라벨링', icon: '🏷️', available: true },
   { key: 'members', label: '회원 관리', icon: '👥', available: false },
   { key: 'content', label: '콘텐츠 관리', icon: '📰', available: false },
   { key: 'settings', label: '설정', icon: '⚙️', available: false },
@@ -235,10 +237,9 @@ export default function AdminPage() {
         </nav>
 
         <main className="admin-content">
-          {activeItem?.available
-            ? activeNav === 'suggestions' && <SuggestionsPanel />
-            : <ComingSoonPanel label={activeItem?.label ?? ''} />
-          }
+          {!activeItem?.available && <ComingSoonPanel label={activeItem?.label ?? ''} />}
+          {activeNav === 'suggestions' && <SuggestionsPanel />}
+          {activeNav === 'labeling' && <LabelingPanel />}
         </main>
       </div>
     </div>

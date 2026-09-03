@@ -459,3 +459,331 @@
   .filter-tabs { flex-wrap: wrap; }
   .suggestion-actions { flex-direction: column; align-items: flex-end; }
 }
+
+/* ── Labeling: Stats ── */
+.labeling-stats .stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stat-sub {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.stat-distribution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dist-chip {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dist-chip.HIGH { background: #fee2e2; color: #b91c1c; }
+.dist-chip.MEDIUM { background: #fef3c7; color: #b45309; }
+.dist-chip.LOW { background: #e2e8f0; color: #64748b; }
+
+/* ── Labeling: Controls ── */
+.labeling-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.labeling-select {
+  padding: 7px 12px;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+}
+
+.labeling-select:focus {
+  outline: none;
+  border-color: #243044;
+}
+
+/* ── Labeling: Guide sheet ── */
+.labeling-guide {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.labeling-guide.open { border-color: #cbd5e1; }
+
+.labeling-guide-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: #f8fafc;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+}
+
+.labeling-guide-toggle:hover { background: #f1f5f9; }
+
+.labeling-guide-body {
+  padding: 16px 18px 18px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.guide-lead {
+  font-size: 13.5px;
+  color: #1e293b;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.labeling-guide-body dt {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #243044;
+  margin-bottom: 4px;
+}
+
+.labeling-guide-body dd {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+
+.labeling-guide-body dd:last-child { margin-bottom: 0; }
+.labeling-guide-body strong { color: #374151; }
+
+/* ── Labeling: Progress ── */
+.labeling-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.labeling-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.labeling-progress-fill {
+  height: 100%;
+  background: #243044;
+  border-radius: 6px;
+  transition: width 0.25s ease;
+}
+
+.labeling-progress-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Labeling: Article card ── */
+.labeling-card {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin-bottom: 20px;
+}
+
+.labeling-card-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.labeling-category {
+  padding: 3px 10px;
+  background: #243044;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.labeling-source,
+.labeling-date {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.labeling-title {
+  font-size: 21px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  word-break: keep-all;
+}
+
+.labeling-content {
+  font-size: 14.5px;
+  color: #334155;
+  line-height: 1.75;
+  max-height: 220px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.labeling-origin-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #243044;
+  text-decoration: none;
+}
+
+.labeling-origin-link:hover { text-decoration: underline; }
+
+/* ── Labeling: Decision buttons ── */
+.labeling-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.labeling-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 18px 12px;
+  border-radius: 14px;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+
+.labeling-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.labeling-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.labeling-btn-key {
+  font-size: 11px;
+  font-weight: 800;
+  color: #94a3b8;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0 6px;
+  line-height: 17px;
+}
+
+.labeling-btn-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.labeling-btn-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.labeling-btn.HIGH:hover:not(:disabled),
+.labeling-btn.HIGH.chosen { border-color: #dc2626; background: #fef2f2; }
+.labeling-btn.MEDIUM:hover:not(:disabled),
+.labeling-btn.MEDIUM.chosen { border-color: #f59e0b; background: #fffbeb; }
+.labeling-btn.LOW:hover:not(:disabled),
+.labeling-btn.LOW.chosen { border-color: #94a3b8; background: #f8fafc; }
+
+.labeling-btn.chosen .labeling-btn-key {
+  background: #243044;
+  border-color: #243044;
+  color: #fff;
+}
+
+/* ── Labeling: Footer ── */
+.labeling-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.labeling-back {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.labeling-back:hover:not(:disabled) { color: #243044; }
+.labeling-back:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.labeling-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ── Labeling: States ── */
+.labeling-error { padding: 20px 0 0; }
+
+.labeling-done {
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.labeling-done-icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: #d1fae5;
+  color: #065f46;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 52px;
+}
+
+.labeling-done h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.labeling-done p {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+@media (max-width: 640px) {
+  .labeling-controls { flex-direction: column; align-items: stretch; gap: 8px; }
+  .labeling-buttons { grid-template-columns: 1fr; }
+  .labeling-btn { flex-direction: row; gap: 10px; padding: 14px; }
+  .labeling-title { font-size: 18px; }
+  .labeling-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
