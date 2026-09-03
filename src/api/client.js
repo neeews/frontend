@@ -15,7 +15,9 @@ export function authHeaders(options = {}) {
 export async function parseResponse(res) {
   if (!res.ok) {
     const text = await res.text()
-    let message = res.statusText
+    // 서버가 본문 없이 상태코드만 주면 statusText 도 비어 있어 메시지가 빈 문자열이 된다.
+    // 빈 메시지는 호출부의 `error &&` 검사를 통과하지 못해 오류가 조용히 사라진다.
+    let message = res.statusText || `요청 실패 (HTTP ${res.status})`
     if (text) {
       try { message = JSON.parse(text).message ?? message } catch { message = text }
     }
