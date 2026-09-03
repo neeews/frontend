@@ -666,7 +666,7 @@
 /* ── Labeling: Decision buttons ── */
 .labeling-buttons {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
@@ -710,8 +710,6 @@
 
 .labeling-btn.HIGH:hover:not(:disabled),
 .labeling-btn.HIGH.chosen { border-color: #dc2626; background: #fef2f2; }
-.labeling-btn.MEDIUM:hover:not(:disabled),
-.labeling-btn.MEDIUM.chosen { border-color: #f59e0b; background: #fffbeb; }
 .labeling-btn.LOW:hover:not(:disabled),
 .labeling-btn.LOW.chosen { border-color: #94a3b8; background: #f8fafc; }
 

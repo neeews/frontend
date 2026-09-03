@@ -3,11 +3,18 @@ import { adminApi } from '../api/admin'
 
 const BATCH_SIZE = 20
 
-// 버튼을 낮음→보통→중요 순으로 두어 숫자키 1·2·3이 화면 순서와 그대로 맞물리게 한다.
+// 판단은 중요하냐 아니냐 둘 중 하나다. 서버 enum 은 HIGH/MEDIUM/LOW 3값이라
+// 중요를 HIGH, 안 중요를 LOW 에 싣고 MEDIUM 은 이 화면에서 쓰지 않는다.
 const LABELS = [
-  { key: 'LOW', name: '낮음', hint: '놓쳐도 그만', shortcut: '1' },
-  { key: 'MEDIUM', name: '보통', hint: '관심 있으면', shortcut: '2' },
-  { key: 'HIGH', name: '중요', hint: '놓치면 안 됨', shortcut: '3' },
+  { key: 'LOW', name: '안 중요', hint: '놓쳐도 그만', shortcut: '1' },
+  { key: 'HIGH', name: '중요', hint: '놓치면 안 됨', shortcut: '2' },
+]
+
+// 분포에는 과거 3단계로 매긴 보통 라벨이 남아 있을 수 있어 이름만 따로 둔다.
+const DISTRIBUTION_ROWS = [
+  { key: 'HIGH', name: '중요' },
+  { key: 'MEDIUM', name: '보통' },
+  { key: 'LOW', name: '안 중요' },
 ]
 
 const FILTERS = [
@@ -53,20 +60,21 @@ function GuideSheet() {
         <div className="labeling-guide-body">
           <p className="guide-lead">
             기준은 “사건이 얼마나 큰가”가 아니라 <strong>“이 기사를 놓치면 독자가 손해를 보는가”</strong>다.
+            손해를 본다면 중요, 아니면 안 중요다.
           </p>
           <dl>
-            <dt>1단계 · 형식으로 걸러지는 LOW</dt>
+            <dt>1단계 · 형식으로 걸러지는 안 중요</dt>
             <dd>
               [게시판] [부고] [동정] [인사] [신간] [내일날씨] 말머리, 지자체 보도자료
-              (○○시, ~ 모집/개최), MOU 체결, 증권사 목표주가. 내용을 보지 않고 낮음.
-              [특징주]는 등락 자체면 낮음, 원인이 되는 사실이 크면 보통.
+              (○○시, ~ 모집/개최), MOU 체결, 증권사 목표주가. 내용을 보지 않고 안 중요.
+              [특징주]는 등락 자체면 안 중요, 조 단위 계약처럼 원인이 되는 사실이 크면 다시 본다.
             </dd>
-            <dt>2단계 · 카테고리 사전확률 (HIGH 비율)</dt>
+            <dt>2단계 · 카테고리 사전확률 (중요 비율)</dt>
             <dd>
               정치 41% · IT/과학 36% · 세계 31% · 사회 21% · 경제 6% · 연예/문화 3% · 스포츠 0%.
               경제·스포츠·연예에서 중요를 매길 땐 축 2개를 실제로 충족하는지 재확인한다.
             </dd>
-            <dt>3단계 · 다섯 축 (2점 이상 중요 / 1점 보통 / 0점 낮음)</dt>
+            <dt>3단계 · 다섯 축 (2점 이상이면 중요, 1점 이하면 안 중요)</dt>
             <dd>
               <strong>① 파급 범위</strong> 전국 단위 이상인가 ·
               <strong> ② 불가역성</strong> 사망·선고·기소·확정 등 되돌릴 수 없는 일인가 ·
@@ -77,7 +85,7 @@ function GuideSheet() {
               단, ①~④가 0점인데 ⑤만으로 중요를 주지 않는다. 가십도 보도량은 많다.
             </dd>
             <dt>중복 사건</dt>
-            <dd>한 사건당 중요는 1건. 대표는 (종합)·마지막 보, 나머지는 보통으로 내린다.</dd>
+            <dd>한 사건당 중요는 1건. 대표는 (종합)·마지막 보, 나머지는 안 중요로 내린다.</dd>
           </dl>
         </div>
       )}
@@ -155,7 +163,7 @@ export default function LabelingPanel() {
     }
   }, [queue, cursor, isSaving, round, exhausted, fetchQueue, fetchStats])
 
-  // 숫자키 1·2·3으로도 매길 수 있게 한다. 300건을 넘기려면 마우스만으로는 느리다.
+  // 숫자키 1·2로도 매길 수 있게 한다. 수백 건을 넘기려면 마우스만으로는 느리다.
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return
@@ -185,18 +193,20 @@ export default function LabelingPanel() {
         <div className="stat-card">
           <div className="stat-label">등급 분포</div>
           <div className="stat-distribution">
-            {LABELS.slice().reverse().map(l => (
-              <span key={l.key} className={`dist-chip ${l.key}`}>
-                {l.name} {distribution[l.key] ?? 0}
-              </span>
-            ))}
+            {DISTRIBUTION_ROWS
+              .filter(r => r.key !== 'MEDIUM' || distribution.MEDIUM > 0)
+              .map(r => (
+                <span key={r.key} className={`dist-chip ${r.key}`}>
+                  {r.name} {distribution[r.key] ?? 0}
+                </span>
+              ))}
           </div>
           <div className="stat-sub">기준 {stats?.guideVersion ?? '—'}</div>
         </div>
         <AgreementStat
           label="AI 시드 일치율"
           data={stats?.seedAgreement}
-          description="AI가 매긴 기사를 라벨링하면 계산된다"
+          description="AI 시드가 보통으로 매긴 기사와는 구조적으로 어긋난다"
         />
         <AgreementStat
           label="자기 일치율"
@@ -308,7 +318,7 @@ export default function LabelingPanel() {
               >
                 ← 이전 기사 다시 매기기
               </button>
-              <span className="labeling-hint">숫자키 1·2·3으로도 매길 수 있습니다</span>
+              <span className="labeling-hint">숫자키 1·2로도 매길 수 있습니다</span>
             </div>
           </>
         )}
