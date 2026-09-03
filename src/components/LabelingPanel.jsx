@@ -31,6 +31,15 @@ const ROUNDS = [
   { value: 1, label: '2회차 (자기일치율)' },
 ]
 
+// 403 은 관리자 권한이 없거나 토큰이 만료된 경우다. 상태코드만 띄우면 무엇을 해야 할지 알 수 없다.
+function describeError(err) {
+  const message = err?.message || '요청이 실패했습니다.'
+  if (message.includes('403')) {
+    return '관리자 권한이 없거나 로그인이 만료됐습니다. 다시 로그인한 뒤 시도해 주세요.'
+  }
+  return message
+}
+
 function formatDate(iso) {
   if (!iso) return ''
   return new Date(iso).toLocaleString('ko-KR', {
@@ -129,7 +138,7 @@ export default function LabelingPanel() {
           setCursor(0)
         }
       })
-      .catch(err => setError(err.message))
+      .catch(err => setError(describeError(err)))
       .finally(() => setIsLoading(false))
   }, [round, filter])
 
@@ -160,7 +169,7 @@ export default function LabelingPanel() {
         fetchStats()
       }
     } catch (err) {
-      setError(err.message)
+      setError(describeError(err))
     } finally {
       setIsSaving(false)
     }
