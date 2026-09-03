@@ -17,10 +17,13 @@ const DISTRIBUTION_ROWS = [
   { key: 'LOW', name: '안 중요' },
 ]
 
+// AI 시드 300건과 겹치는 기사인지로 모집단을 가른다.
+// AI가 매긴 기사(SEED_ONLY)를 다시 매기면 시드 일치율이 나오고,
+// AI가 안 매긴 기사(NO_SEED)로 매기면 학습에 안 쓰인 채점용 정답지가 된다.
 const FILTERS = [
   { key: 'ALL', label: '전체' },
-  { key: 'NO_SEED', label: 'AI 미라벨' },
-  { key: 'SEED_ONLY', label: 'AI 라벨분' },
+  { key: 'SEED_ONLY', label: 'AI가 매긴 기사' },
+  { key: 'NO_SEED', label: 'AI가 안 매긴 기사' },
 ]
 
 const ROUNDS = [
