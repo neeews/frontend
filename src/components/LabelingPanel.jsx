@@ -117,6 +117,7 @@ export default function LabelingPanel() {
   const [error, setError] = useState(null)
   const [exhausted, setExhausted] = useState(false)
   const [savedCount, setSavedCount] = useState(0)
+  const [lastSaved, setLastSaved] = useState(null)
 
   const fetchStats = useCallback(() => {
     adminApi.getLabelingStats()
@@ -161,12 +162,18 @@ export default function LabelingPanel() {
       await adminApi.labelArticle(article.id, labelKey, round)
       setDecisions(prev => ({ ...prev, [article.id]: labelKey }))
       setSavedCount(c => c + 1)
+      setLastSaved({
+        title: article.title,
+        name: LABELS.find(l => l.key === labelKey)?.name ?? labelKey,
+      })
       const nextCursor = cursor + 1
       setCursor(nextCursor)
+      // 저장할 때마다 통계를 다시 읽는다. 20건 단위로만 갱신하면
+      // 숫자가 한참 멈춰 있어 저장이 안 되는 것처럼 보인다.
+      fetchStats()
       // 큐 끝에 닿으면 이어서 받아온다. 빈 응답이 오면 exhausted 가 서고 완료 화면으로 넘어간다.
       if (nextCursor >= queue.length && !exhausted) {
         fetchQueue(true)
-        fetchStats()
       }
     } catch (err) {
       setError(describeError(err))
@@ -330,7 +337,13 @@ export default function LabelingPanel() {
               >
                 ← 이전 기사 다시 매기기
               </button>
-              <span className="labeling-hint">숫자키 1·2로도 매길 수 있습니다</span>
+              {lastSaved ? (
+                <span className="labeling-saved" title={lastSaved.title}>
+                  저장됨 · {lastSaved.name} — {lastSaved.title}
+                </span>
+              ) : (
+                <span className="labeling-hint">숫자키 1·2로도 매길 수 있습니다</span>
+              )}
             </div>
           </>
         )}

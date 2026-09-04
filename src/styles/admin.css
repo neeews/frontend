@@ -746,6 +746,16 @@
   font-weight: 500;
 }
 
+.labeling-saved {
+  font-size: 12px;
+  font-weight: 600;
+  color: #10b981;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ── Labeling: States ── */
 .labeling-error { padding: 20px 0 0; }
 
