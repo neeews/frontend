@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { authApi, tokenStorage } from '../api/auth'
+import { articlesApi } from '../api/articles'
 
 const AuthContext = createContext({
   user: null,
@@ -26,6 +27,15 @@ export function AuthProvider({ children }) {
     tokenStorage.clear()
     setUser(null)
     setToken(null)
+  }, [])
+
+  // 메인 화면이 부르는 기사 API 는 전부 permitAll 이라 토큰이 만료돼도 200 이 온다.
+  // 그래서 만료를 감지할 기회가 없어 헤더가 계속 로그인된 상태로 남았다.
+  // 앱이 뜰 때 인증이 필요한 요청을 한 번 보내 재발급 또는 로그아웃을 트리거한다.
+  useEffect(() => {
+    if (!tokenStorage.getAccess()) return
+    // 만료 처리는 아래 auth:logout 리스너가 맡는다. 네트워크 오류로는 로그아웃시키지 않는다.
+    articlesApi.validateSession().catch(() => {})
   }, [])
 
   // articles.js가 토큰 갱신/만료 시 CustomEvent로 알려줌

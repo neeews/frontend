@@ -66,6 +66,10 @@ export const articlesApi = {
   getSearchHistory: () => request('/users/me/search-history').then(d => d?.history ?? []),
   clearSearchHistory: () => request('/users/me/search-history', { method: 'DELETE' }),
   getMe: () => request('/auth/me'),
+  // 토큰이 아직 유효한지만 확인한다. 응답 본문은 쓰지 않는다.
+  // 만료됐으면 request() 가 재발급을 시도하고, 그것도 실패하면 auth:logout 을 쏜다.
+  // /auth/me 는 permitAll 이라 토큰 없이도 500 이 떠서 검증에 쓸 수 없다.
+  validateSession: () => request('/users/me/search-history'),
   deleteMe: () => request('/users/me', { method: 'DELETE' }),
   submitSuggestion: (title, content) =>
     request('/suggestions', { method: 'POST', body: JSON.stringify({ title, content }) }),
