@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
+import { Link, useParams, useNavigate, useNavigationType } from 'react-router-dom'
 import { articlesApi } from '../api/articles'
 import { useAuth } from '../context/AuthContext'
 import { useReadArticles } from '../hooks/useReadArticles'
@@ -10,22 +10,70 @@ import '../styles/brand.css'
 import '../styles/main.css'
 import '../styles/category.css'
 
+const CACHE_PREFIX = 'categoryPage:'
+
+function readCache(name) {
+  try {
+    const raw = sessionStorage.getItem(CACHE_PREFIX + name)
+    if (!raw) return null
+    const cached = JSON.parse(raw)
+    return Array.isArray(cached?.articles) && cached.articles.length > 0 ? cached : null
+  } catch {
+    return null
+  }
+}
+
 export default function CategoryPage() {
   const { name } = useParams()
   const navigate = useNavigate()
+  const navigationType = useNavigationType()
   const { isLoggedIn, logout } = useAuth()
   const { isRead } = useReadArticles()
-  const [articles, setArticles] = useState([])
-  const [sort, setSort] = useState('latest')
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+
+  // 뒤로 가기로 돌아온 경우에만 직전에 보던 목록·스크롤 위치를 복원한다.
+  const [restored] = useState(() => (navigationType === 'POP' ? readCache(name) : null))
+
+  const [articles, setArticles] = useState(() => restored?.articles ?? [])
+  const [sort, setSort] = useState(() => restored?.sort ?? 'latest')
+  const [page, setPage] = useState(() => restored?.page ?? 1)
+  const [hasMore, setHasMore] = useState(() => restored?.hasMore ?? false)
+  const [isLoading, setIsLoading] = useState(() => !restored)
   const [loadingMore, setLoadingMore] = useState(false)
   const sentinelRef = useRef(null)
   const loadingMoreRef = useRef(false)
-  const hasMoreRef = useRef(false)
+  const hasMoreRef = useRef(restored?.hasMore ?? false)
+  const skipInitialFetchRef = useRef(Boolean(restored))
+
+  // 복원한 목록이 그려진 뒤 이전 스크롤 위치로 이동
+  useLayoutEffect(() => {
+    if (restored) window.scrollTo(0, restored.scrollY ?? 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const stateRef = useRef(null)
+  useEffect(() => {
+    stateRef.current = { articles, sort, page, hasMore }
+  }, [articles, sort, page, hasMore])
+
+  const saveCache = useCallback(() => {
+    try {
+      sessionStorage.setItem(
+        CACHE_PREFIX + name,
+        JSON.stringify({ ...stateRef.current, scrollY: window.scrollY })
+      )
+    } catch {
+      // 저장 공간이 부족하면 복원을 포기한다 (기존처럼 처음부터 다시 불러옴)
+    }
+  }, [name])
+
+  // 다른 화면으로 이동할 때 현재 목록과 스크롤 위치를 저장
+  useEffect(() => saveCache, [saveCache])
 
   useEffect(() => {
+    if (skipInitialFetchRef.current) {
+      skipInitialFetchRef.current = false
+      return
+    }
     setIsLoading(true)
     setArticles([])
     setPage(1)
@@ -85,6 +133,11 @@ export default function CategoryPage() {
   const handleLogout = async () => {
     await logout()
     navigate('/')
+  }
+
+  const openArticle = id => {
+    saveCache()
+    navigate(`/articles/${id}`)
   }
 
   return (
@@ -150,7 +203,7 @@ export default function CategoryPage() {
               <div
                 key={a.id}
                 className="cat-article-card"
-                onClick={() => navigate(`/articles/${a.id}`)}
+                onClick={() => openArticle(a.id)}
               >
                 <div className="cat-card-body">
                   {a.category && (
