@@ -160,7 +160,7 @@ export default function MainPage() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                 </svg>
-                {activeCategory === '전체' ? '핫 이슈' : `${activeCategory} 인기 기사`}
+                {activeCategory === '전체' ? '핫 이슈' : `${activeCategory} 주요 기사`}
               </h2>
             </div>
 
