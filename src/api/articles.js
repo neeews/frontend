@@ -44,7 +44,8 @@ export const articlesApi = {
       ? request(`/articles?category=${encodeURIComponent(category)}&sort=popular`).then(d => toList(d, 'articles'))
       : request('/articles/hot').then(d => toList(d, 'articles')),
   getLatest: () => request('/articles/latest').then(d => toList(d, 'articles')),
-  // AI 요약이 있는 기사 최신 5건 — summary에 aiSummary가 그대로 담겨 온다
+  // min-score 컷을 넘겨 AI 요약이 달린 오늘 기사 전체 — 건수 제한 없이 중요도 점수 순으로 온다
+  // (summary에 aiSummary가 그대로 담겨 오고, 오늘 치가 5건 미만이면 백엔드가 어제 치로 채운다)
   getTodaySummaries: () => request('/articles/today').then(d => toList(d, 'articles')),
   // returns { articles, total, page }
   getByCategory: (category, sort = 'latest', page = 1) =>
