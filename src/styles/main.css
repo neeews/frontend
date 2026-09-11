@@ -604,6 +604,18 @@
   margin-top: auto;
 }
 
+.site-footer p { margin: 0 0 4px; }
+.site-footer p:last-child { margin-bottom: 0; }
+
+.site-footer a {
+  color: #64748b;
+  text-decoration: none;
+}
+
+.site-footer a:hover { text-decoration: underline; }
+
+.footer-sep { margin: 0 8px; }
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .content-layout {

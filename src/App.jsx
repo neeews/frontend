@@ -8,6 +8,7 @@ import CategoryPage from './pages/CategoryPage'
 import SearchPage from './pages/SearchPage'
 import MyPage from './pages/MyPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsPage from './pages/TermsPage'
 import AdminPage from './pages/AdminPage'
 import PrivateRoute from './components/PrivateRoute'
 import AdminRoute from './components/AdminRoute'
@@ -26,6 +27,7 @@ function App() {
         <Route path="/category/:name" element={<CategoryPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
         <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />
         <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
       </Routes>

@@ -20,6 +20,7 @@ export default function SignupPage() {
   const [codeError, setCodeError] = useState('')
   // 개인정보 보호법 제22조는 필수 동의를 다른 항목과 구분해 따로 받도록 하고 있다.
   const [agreedPrivacy, setAgreedPrivacy] = useState(false)
+  const [agreedTerms, setAgreedTerms] = useState(false)
   const [agreedAge, setAgreedAge] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -84,7 +85,7 @@ export default function SignupPage() {
       setError('비밀번호가 일치하지 않습니다.')
       return
     }
-    if (!agreedAge || !agreedPrivacy) {
+    if (!agreedAge || !agreedTerms || !agreedPrivacy) {
       setError('필수 항목에 모두 동의해주세요.')
       return
     }
@@ -226,7 +227,40 @@ export default function SignupPage() {
             </div>
           </div>
           <fieldset className="consent-box">
-            <legend>개인정보 수집·이용 동의</legend>
+            <legend>약관 동의</legend>
+
+            <label className="consent-row">
+              <input
+                type="checkbox"
+                checked={agreedAge}
+                onChange={e => setAgreedAge(e.target.checked)}
+              />
+              <span><b>[필수]</b> 만 14세 이상입니다.</span>
+            </label>
+            <label className="consent-row">
+              <input
+                type="checkbox"
+                checked={agreedTerms}
+                onChange={e => setAgreedTerms(e.target.checked)}
+              />
+              <span>
+                <b>[필수]</b> 이용약관에 동의합니다.{' '}
+                <Link to="/terms" target="_blank" rel="noreferrer">전문 보기</Link>
+              </span>
+            </label>
+            <label className="consent-row">
+              <input
+                type="checkbox"
+                checked={agreedPrivacy}
+                onChange={e => setAgreedPrivacy(e.target.checked)}
+              />
+              <span>
+                <b>[필수]</b> 개인정보 수집·이용에 동의합니다.{' '}
+                <Link to="/privacy" target="_blank" rel="noreferrer">전문 보기</Link>
+              </span>
+            </label>
+
+            <p className="consent-caption">개인정보 수집·이용 내역</p>
             <div className="consent-table-scroll">
               <table className="consent-table">
                 <thead>
@@ -251,33 +285,13 @@ export default function SignupPage() {
               동의를 거부하실 수 있으나, 위 항목은 서비스 제공에 반드시 필요한 최소한의 정보이므로
               거부 시 회원가입이 제한됩니다.
             </p>
-
-            <label className="consent-row">
-              <input
-                type="checkbox"
-                checked={agreedAge}
-                onChange={e => setAgreedAge(e.target.checked)}
-              />
-              <span><b>[필수]</b> 만 14세 이상입니다.</span>
-            </label>
-            <label className="consent-row">
-              <input
-                type="checkbox"
-                checked={agreedPrivacy}
-                onChange={e => setAgreedPrivacy(e.target.checked)}
-              />
-              <span>
-                <b>[필수]</b> 개인정보 수집·이용에 동의합니다.{' '}
-                <Link to="/privacy" target="_blank" rel="noreferrer">전문 보기</Link>
-              </span>
-            </label>
           </fieldset>
 
           {error && <p className="auth-error">{error}</p>}
           <button
             type="submit"
             className="btn-submit"
-            disabled={!emailVerified || !agreedAge || !agreedPrivacy || loading}
+            disabled={!emailVerified || !agreedAge || !agreedTerms || !agreedPrivacy || loading}
           >
             {loading ? '가입 중...' : '회원가입'}
           </button>
