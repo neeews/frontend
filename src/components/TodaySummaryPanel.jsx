@@ -9,17 +9,18 @@ import '../styles/today.css'
 export default function TodaySummaryPanel({ open, onToggle }) {
   const navigate = useNavigate()
   const { isRead } = useReadArticles()
-  const [summaries, setSummaries] = useState(null) // null = 아직 안 받아옴
+  const [summaries, setSummaries] = useState(null) // null = 아직 한 번도 못 받아옴
 
-  // 처음 열릴 때 한 번만 조회
+  // 목록이 건수 제한 없이 하루 내내 늘어나므로 열 때마다 다시 조회한다.
+  // 이전 목록은 지우지 않고 둔 채 덮어써야, 갱신하는 사이 화면이 비지 않는다.
   useEffect(() => {
-    if (!open || summaries !== null) return
+    if (!open) return
     let cancelled = false
     articlesApi.getTodaySummaries()
       .then(list => { if (!cancelled) setSummaries(list) })
-      .catch(() => { if (!cancelled) setSummaries([]) })
+      .catch(() => { if (!cancelled) setSummaries(prev => prev ?? []) })
     return () => { cancelled = true }
-  }, [open, summaries])
+  }, [open])
 
   // 열려 있는 동안 Esc로 닫고 배경 스크롤을 막는다
   useEffect(() => {
