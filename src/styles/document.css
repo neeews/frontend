@@ -1,0 +1,147 @@
+/* ── 문서형 페이지 (개인정보 처리방침·이용약관) ── */
+.doc-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 40px 20px 64px;
+}
+
+.doc-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 20px;
+  padding: 48px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
+  color: #334155;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.doc-back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.doc-back:hover { color: #0f172a; }
+
+.doc-wrap h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px;
+  letter-spacing: -0.6px;
+}
+
+.doc-meta {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0 0 32px;
+}
+
+.doc-summary {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px 24px 8px;
+  margin-bottom: 40px;
+}
+
+.doc-summary h2 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px;
+}
+
+.doc-h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.doc-wrap section { margin-bottom: 28px; }
+
+.doc-wrap h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 24px 0 8px;
+}
+
+.doc-wrap p { margin: 0 0 12px; }
+
+.doc-wrap ul,
+.doc-wrap ol {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+
+.doc-wrap li { margin-bottom: 6px; }
+
+.doc-contact { list-style: none; padding-left: 0; }
+
+.doc-table-scroll {
+  overflow-x: auto;
+  margin-bottom: 14px;
+}
+
+.doc-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fff;
+}
+
+.doc-table th,
+.doc-table td {
+  border: 1px solid #e2e8f0;
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.doc-table th {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.doc-notice {
+  background: #fff;
+  border-left: 3px solid #94a3b8;
+  padding: 12px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+}
+
+.doc-footer-link {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.doc-footer-link a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.doc-footer-link a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .doc-page { padding: 24px 14px 48px; }
+  .doc-wrap { padding: 28px 20px; border-radius: 14px; }
+  .doc-wrap h1 { font-size: 23px; }
+  .doc-summary { padding: 18px 16px 4px; }
+}

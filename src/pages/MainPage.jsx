@@ -375,6 +375,7 @@ export default function MainPage() {
 
       <footer className="site-footer">
         <p>© 2026 neeews. 모든 뉴스를 한눈에.</p>
+        <p><Link to="/privacy">개인정보 처리방침</Link></p>
       </footer>
     </div>
   )

@@ -4,6 +4,7 @@ import { authApi } from '../api/auth'
 import { useAuth } from '../context/AuthContext'
 import EyeIcon from '../components/EyeIcon'
 import { VERIFY_CODE_DURATION, formatMMSS } from '../utils/time'
+import { CONSENT_ITEMS } from '../constants/privacy'
 import '../styles/auth.css'
 
 export default function SignupPage() {
@@ -17,6 +18,9 @@ export default function SignupPage() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [error, setError] = useState('')
   const [codeError, setCodeError] = useState('')
+  // 개인정보 보호법 제22조는 필수 동의를 다른 항목과 구분해 따로 받도록 하고 있다.
+  const [agreedPrivacy, setAgreedPrivacy] = useState(false)
+  const [agreedAge, setAgreedAge] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { login } = useAuth()
@@ -78,6 +82,10 @@ export default function SignupPage() {
     }
     if (form.password !== form.confirm) {
       setError('비밀번호가 일치하지 않습니다.')
+      return
+    }
+    if (!agreedAge || !agreedPrivacy) {
+      setError('필수 항목에 모두 동의해주세요.')
       return
     }
     setLoading(true)
@@ -217,8 +225,60 @@ export default function SignupPage() {
               </button>
             </div>
           </div>
+          <fieldset className="consent-box">
+            <legend>개인정보 수집·이용 동의</legend>
+            <div className="consent-table-scroll">
+              <table className="consent-table">
+                <thead>
+                  <tr>
+                    <th>수집 항목</th>
+                    <th>이용 목적</th>
+                    <th>보유 기간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {CONSENT_ITEMS.map(row => (
+                    <tr key={row.items}>
+                      <td>{row.items}</td>
+                      <td>{row.purpose}</td>
+                      <td>{row.period}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="consent-refusal">
+              동의를 거부하실 수 있으나, 위 항목은 서비스 제공에 반드시 필요한 최소한의 정보이므로
+              거부 시 회원가입이 제한됩니다.
+            </p>
+
+            <label className="consent-row">
+              <input
+                type="checkbox"
+                checked={agreedAge}
+                onChange={e => setAgreedAge(e.target.checked)}
+              />
+              <span><b>[필수]</b> 만 14세 이상입니다.</span>
+            </label>
+            <label className="consent-row">
+              <input
+                type="checkbox"
+                checked={agreedPrivacy}
+                onChange={e => setAgreedPrivacy(e.target.checked)}
+              />
+              <span>
+                <b>[필수]</b> 개인정보 수집·이용에 동의합니다.{' '}
+                <Link to="/privacy" target="_blank" rel="noreferrer">전문 보기</Link>
+              </span>
+            </label>
+          </fieldset>
+
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit" className="btn-submit" disabled={!emailVerified || loading}>
+          <button
+            type="submit"
+            className="btn-submit"
+            disabled={!emailVerified || !agreedAge || !agreedPrivacy || loading}
+          >
             {loading ? '가입 중...' : '회원가입'}
           </button>
         </form>
