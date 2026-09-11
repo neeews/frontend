@@ -34,8 +34,7 @@ export default function LoginPage() {
     <div className="auth-page">
       <div className="auth-form-wrap">
         <Link to="/" className="auth-back">← 메인으로</Link>
-        <h2>다시 만나서 반가워요 👋</h2>
-        <p className="auth-subtitle">로그인하고 오늘의 뉴스를 확인하세요</p>
+        <h2>로그인</h2>
 
         <form onSubmit={submit}>
           <div className="form-group">

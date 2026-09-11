@@ -42,6 +42,9 @@
   margin-bottom: 36px;
 }
 
+/* 부제 없이 제목 바로 아래 폼이 오는 화면(로그인·회원가입)의 간격을 맞춘다. */
+.auth-form-wrap h2 + form { margin-top: 24px; }
+
 .form-group {
   margin-bottom: 22px;
 }
