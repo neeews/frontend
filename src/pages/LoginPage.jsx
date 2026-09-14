@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { authApi } from '../api/auth'
 import { useAuth } from '../context/AuthContext'
 import EyeIcon from '../components/EyeIcon'
+import AuthLogo from '../components/AuthLogo'
 import '../styles/auth.css'
 
 export default function LoginPage() {
@@ -32,8 +33,8 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page">
+      <AuthLogo />
       <div className="auth-form-wrap">
-        <Link to="/" className="auth-back">← 메인으로</Link>
         <h2>로그인</h2>
 
         <form onSubmit={submit}>
@@ -51,7 +52,10 @@ export default function LoginPage() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">비밀번호</label>
+            <div className="label-row">
+              <label htmlFor="password">비밀번호</label>
+              <Link to="/forgot-password" className="label-link">비밀번호 찾기</Link>
+            </div>
             <div className="password-wrap">
               <input
                 id="password"
@@ -63,22 +67,24 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 required
               />
-              <button type="button" className="btn-eye" onClick={() => setShowPassword(v => !v)}>
+              <button
+                type="button"
+                className="btn-eye"
+                onClick={() => setShowPassword(v => !v)}
+                aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+              >
                 <EyeIcon open={showPassword} />
               </button>
             </div>
           </div>
-          {error && <p className="auth-error">{error}</p>}
+          {error && <p className="auth-alert" role="alert">{error}</p>}
           <button type="submit" className="btn-submit" disabled={loading}>
             {loading ? '로그인 중...' : '로그인'}
           </button>
         </form>
 
         <p className="auth-switch">
-          계정이 없으신가요? <Link to="/signup">회원가입</Link>
-        </p>
-        <p className="auth-switch">
-          <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
+          계정이 없으신가요?<Link to="/signup">회원가입</Link>
         </p>
       </div>
     </div>

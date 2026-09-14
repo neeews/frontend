@@ -1,84 +1,123 @@
+/* ── 로그인 · 회원가입 · 비밀번호 찾기 공통 ──
+   색은 사이트 헤더와 같은 네이비(#243044)를 기준으로 하고, 강조색을 따로 늘리지 않는다. */
 .auth-page {
+  --auth-ink: #0f172a;
+  --auth-text: #334155;
+  --auth-muted: #64748b;
+  --auth-faint: #94a3b8;
+  --auth-line: #e2e8f0;
+  --auth-navy: #243044;
+  --auth-ring: rgba(36, 48, 68, 0.14);
+  --auth-ok: #059669;
+  --auth-danger: #dc2626;
+
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 28px;
   background: #f1f5f9;
-  padding: 40px 20px;
+  padding: 48px 20px;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.auth-logo .logo-mark {
+  width: 32px;
+  height: 32px;
+}
+
+/* brand.css 는 좁은 화면에서 워드마크를 숨기지만, 이 화면에는 로고뿐이라 항상 보여준다. */
+.auth-logo .logo-text {
+  display: inline;
+  font-size: 22px;
 }
 
 .auth-form-wrap {
   width: 100%;
-  max-width: 500px;
+  max-width: 420px;
   background: #fff;
-  border-radius: 20px;
-  padding: 48px 48px;
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--auth-line);
+  border-radius: 16px;
+  padding: 40px 36px 32px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 16px 40px -16px rgba(15, 23, 42, 0.12);
 }
-
-.auth-back {
-  display: inline-block;
-  margin-bottom: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #64748b;
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.auth-back:hover { color: #0f172a; }
 
 .auth-form-wrap h2 {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 8px;
-  letter-spacing: -0.7px;
+  color: var(--auth-ink);
+  letter-spacing: -0.5px;
 }
 
 .auth-subtitle {
-  color: #64748b;
-  font-size: 16px;
-  margin-bottom: 36px;
+  margin-top: 8px;
+  color: var(--auth-muted);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-/* 부제 없이 제목 바로 아래 폼이 오는 화면(로그인·회원가입)의 간격을 맞춘다. */
-.auth-form-wrap h2 + form { margin-top: 24px; }
+.auth-form-wrap form { margin-top: 28px; }
 
-.form-group {
-  margin-bottom: 22px;
-}
+/* ── 입력 ── */
+.form-group { margin-bottom: 20px; }
 
-.form-group label {
+.form-group label,
+.label-row label {
   display: block;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: var(--auth-text);
   margin-bottom: 8px;
 }
 
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.label-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--auth-muted);
+  text-decoration: none;
+}
+
+.label-link:hover { color: var(--auth-navy); text-decoration: underline; }
+
 .form-group input {
   width: 100%;
-  padding: 14px 18px;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 16px;
-  color: #0f172a;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--auth-ink);
   background: #fff;
-  transition: border-color 0.18s, box-shadow 0.18s;
-  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
   outline: none;
-  font-family: inherit;
 }
+
+.form-group input:hover:not(:disabled):not(:focus) { border-color: var(--auth-faint); }
 
 .form-group input:focus {
-  border-color: #4a5b7d;
-  box-shadow: 0 0 0 3px rgba(74, 91, 125, 0.15);
+  border-color: var(--auth-navy);
+  box-shadow: 0 0 0 3px var(--auth-ring);
 }
 
-.form-group input::placeholder {
-  color: #94a3b8;
+.form-group input:disabled {
+  background: #f8fafc;
+  color: var(--auth-muted);
 }
+
+.form-group input::placeholder { color: var(--auth-faint); }
 
 /* ── 크롬 자동완성 ──
    자동완성된 입력창은 브라우저가 배경을 파랗게 칠한다. background 로는 못 덮어서
@@ -97,327 +136,407 @@
 
 /* 자동완성 상태에서도 포커스 링은 살려둔다. 안쪽 채움과 바깥 링을 함께 건다. */
 .auth-page input:-webkit-autofill:focus {
-  -webkit-box-shadow: inset 0 0 0 1000px #fff, 0 0 0 3px rgba(74, 91, 125, 0.15) !important;
-  box-shadow: inset 0 0 0 1000px #fff, 0 0 0 3px rgba(74, 91, 125, 0.15) !important;
+  -webkit-box-shadow: inset 0 0 0 1000px #fff, 0 0 0 3px rgba(36, 48, 68, 0.14) !important;
+  box-shadow: inset 0 0 0 1000px #fff, 0 0 0 3px rgba(36, 48, 68, 0.14) !important;
 }
 
+/* ── 버튼 ── */
 .btn-submit {
   width: 100%;
-  padding: 16px;
-  background: #243044;
-  color: white;
+  height: 50px;
+  margin-top: 8px;
+  background: var(--auth-navy);
+  color: #fff;
   border: none;
-  border-radius: 12px;
-  font-size: 17px;
+  border-radius: 10px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.18s, transform 0.12s, box-shadow 0.18s;
-  margin-top: 8px;
-  font-family: inherit;
-  letter-spacing: 0.2px;
+  transition: background 0.15s;
 }
 
-.btn-submit:hover {
-  opacity: 0.91;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(36, 48, 68, 0.28);
+.btn-submit:hover:not(:disabled) { background: #1a2333; }
+
+.btn-submit:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
 }
 
-.btn-submit:active {
-  transform: translateY(0);
-  box-shadow: none;
+.auth-page button:focus-visible,
+.auth-page a:focus-visible {
+  outline: 2px solid var(--auth-navy);
+  outline-offset: 2px;
 }
 
 .auth-switch {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
   text-align: center;
-  margin-top: 26px;
-  font-size: 15px;
-  color: #64748b;
+  font-size: 14px;
+  color: var(--auth-muted);
 }
 
 .auth-switch a {
-  color: #243044;
+  margin-left: 4px;
+  color: var(--auth-navy);
   font-weight: 700;
   text-decoration: none;
 }
 
-.auth-switch a:hover {
-  text-decoration: underline;
-}
+.auth-switch a:hover { text-decoration: underline; }
 
-/* ── Email verification ── */
-.email-verify-row {
-  display: flex;
-  gap: 10px;
-}
-
-.email-verify-row input {
-  flex: 1;
-  min-width: 0;
-}
-
-.btn-send-code {
-  flex-shrink: 0;
-  padding: 0 18px;
-  height: 52px;
-  background: #4a5b7d;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: opacity 0.15s, transform 0.12s;
-}
-
-.btn-send-code:hover:not(:disabled) {
-  opacity: 0.88;
-  transform: translateY(-1px);
-}
-
-.btn-send-code:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.verify-sent-msg {
-  margin-top: 9px;
-  font-size: 13px;
-  color: #64748b;
-}
-
+/* ── 이메일 인증 ── */
+.email-verify-row,
 .verify-code-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
 }
 
-.code-input {
-  flex: 1;
-  min-width: 0;
-  padding: 12px 16px !important;
-  border: 1.5px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  font-size: 18px !important;
-  font-family: inherit !important;
-  letter-spacing: 3px;
-  text-align: center;
-}
+.email-verify-row input { flex: 1; min-width: 0; }
 
-.code-input:focus {
-  border-color: #4a5b7d !important;
-  box-shadow: 0 0 0 3px rgba(74, 91, 125, 0.15) !important;
-}
-
+.btn-send-code,
 .btn-confirm-code {
   flex-shrink: 0;
-  padding: 12px 18px;
-  background: #243044;
-  color: #fff;
-  border: none;
+  height: 48px;
+  padding: 0 16px;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
   white-space: nowrap;
-  transition: opacity 0.15s;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-.btn-confirm-code:hover:not(:disabled) { opacity: 0.8; }
+/* 발송은 보조 동작이라 테두리 버튼으로 두고, 채운 버튼은 가입·확인에만 쓴다. */
+.btn-send-code {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  color: var(--auth-navy);
+}
 
+.btn-send-code:hover:not(:disabled) {
+  border-color: var(--auth-navy);
+  background: #f8fafc;
+}
+
+.btn-confirm-code {
+  background: var(--auth-navy);
+  border: 1px solid var(--auth-navy);
+  color: #fff;
+}
+
+.btn-confirm-code:hover:not(:disabled) { background: #1a2333; }
+
+.btn-send-code:disabled,
 .btn-confirm-code:disabled {
-  opacity: 0.4;
+  background: #f8fafc;
+  border-color: var(--auth-line);
+  color: var(--auth-faint);
   cursor: not-allowed;
 }
 
-.verify-timer {
-  flex-shrink: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: #ef4444;
-  min-width: 40px;
-  text-align: right;
+.verify-sent-msg {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--auth-muted);
 }
 
-.verify-timer.expired {
-  color: #94a3b8;
+.verify-code-row { margin-top: 8px; }
+
+/* 타이머는 코드 입력칸 안쪽 오른쪽에 붙여 한 줄에 요소가 흩어지지 않게 한다. */
+.code-field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
 }
+
+.form-group .code-input {
+  padding-right: 60px;
+  font-size: 16px;
+  letter-spacing: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.form-group .code-input::placeholder {
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.verify-timer {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--auth-danger);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.verify-timer.expired { color: var(--auth-faint); }
 
 .verify-success {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 9px;
+  margin-top: 8px;
   font-size: 13px;
   font-weight: 600;
-  color: #10b981;
+  color: var(--auth-ok);
 }
 
-.btn-submit:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
+/* ── 비밀번호 보기 ── */
+.password-wrap { position: relative; }
 
-/* ── Password toggle ── */
-.password-wrap {
-  position: relative;
-}
-
-.password-wrap input {
-  padding-right: 48px;
-}
+.form-group .password-wrap input { padding-right: 48px; }
 
 .btn-eye {
   position: absolute;
-  right: 14px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  color: #94a3b8;
   display: flex;
   align-items: center;
+  padding: 4px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--auth-faint);
+  cursor: pointer;
   transition: color 0.15s;
 }
 
-.btn-eye:hover { color: #475569; }
+.btn-eye:hover { color: var(--auth-text); }
 
-/* ── Password rules ── */
+/* ── 비밀번호 조건 ── */
 .pw-rules {
   list-style: none;
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
+  gap: 6px 16px;
 }
 
 .pw-rules li {
-  font-size: 12px;
-  color: #94a3b8;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--auth-faint);
   transition: color 0.2s;
 }
 
 .pw-rules li::before {
-  content: '○';
-  font-size: 10px;
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  box-sizing: border-box;
 }
 
-.pw-rules li.met {
-  color: #10b981;
-}
+.pw-rules li.met { color: var(--auth-ok); }
 
 .pw-rules li.met::before {
-  content: '●';
+  border: none;
+  background: currentColor url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6.2 5 8l4-4.2' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat;
 }
 
+/* ── 오류 ── */
 .auth-error {
-  color: #ef4444;
+  margin-top: 8px;
   font-size: 13px;
-  margin: -4px 0 8px;
+  color: var(--auth-danger);
 }
 
-@media (max-width: 560px) {
-  .auth-form-wrap {
-    padding: 36px 24px;
-  }
-}
-
-/* ── 개인정보 수집·이용 동의 ── */
-.consent-box {
-  margin: 8px 0 20px;
-  padding: 16px 18px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background: #f8fafc;
-}
-
-.consent-box legend {
-  padding: 0 6px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.consent-caption {
-  margin: 16px 0 6px;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #475569;
-}
-
-.consent-table-scroll { overflow-x: auto; }
-
-.consent-table {
-  width: 100%;
-  min-width: 420px;
-  border-collapse: collapse;
-  font-size: 12.5px;
-  background: #fff;
-}
-
-.consent-table th,
-.consent-table td {
-  border: 1px solid #e2e8f0;
-  padding: 7px 9px;
-  text-align: left;
-  vertical-align: top;
-  color: #475569;
+.auth-alert {
+  margin: 4px 0 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  font-size: 13px;
   line-height: 1.5;
+  color: #b91c1c;
 }
 
-.consent-table th {
-  background: #f1f5f9;
-  font-weight: 700;
-  color: #334155;
+/* ── 약관 동의 ── */
+.consent {
+  min-width: 0;
+  margin: 8px 0 20px;
+  padding: 0;
+  border: 1px solid var(--auth-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.consent legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
   white-space: nowrap;
 }
 
-.consent-refusal {
-  margin: 10px 0 0;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: #64748b;
+.consent-all,
+.consent-row label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.consent-all {
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--auth-line);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--auth-ink);
+}
+
+.consent-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 16px;
 }
 
 .consent-row {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
   font-size: 14px;
-  color: #334155;
-  cursor: pointer;
+  color: var(--auth-text);
 }
 
-.consent-row input[type='checkbox'] {
+.consent-row em {
+  margin-left: 4px;
+  font-style: normal;
+  color: var(--auth-faint);
+}
+
+.consent-view {
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  margin-top: 2px;
-  accent-color: #2563eb;
-  cursor: pointer;
-}
-
-.consent-row b {
-  font-weight: 700;
-  color: #dc2626;
-}
-
-.consent-row a {
-  color: #2563eb;
-  font-weight: 600;
+  font-size: 13px;
+  color: var(--auth-muted);
   text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.consent-view:hover { color: var(--auth-navy); }
+
+.consent input[type='checkbox'] {
+  appearance: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: background-color 0.12s, border-color 0.12s;
+}
+
+.consent input[type='checkbox']:hover { border-color: var(--auth-faint); }
+
+.consent input[type='checkbox']:checked {
+  border-color: var(--auth-navy);
+  background: var(--auth-navy) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.2 8.6 13l5.9-6' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 20px no-repeat;
+}
+
+.consent input[type='checkbox']:focus-visible {
+  outline: 2px solid var(--auth-navy);
+  outline-offset: 2px;
+}
+
+.consent-detail {
+  border-top: 1px solid var(--auth-line);
+  font-size: 13px;
+  color: var(--auth-muted);
+}
+
+.consent-detail summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.consent-detail summary::-webkit-details-marker { display: none; }
+
+.consent-detail summary::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.15s;
+}
+
+.consent-detail[open] summary::after { transform: translateY(2px) rotate(-135deg); }
+
+.consent-detail summary:hover { color: var(--auth-navy); }
+
+.consent-detail summary:focus-visible {
+  outline: 2px solid var(--auth-navy);
+  outline-offset: -2px;
+}
+
+.consent-items {
+  list-style: none;
+  margin: 0;
+  padding: 0 16px;
+}
+
+.consent-items li {
+  padding: 10px 0;
+  border-top: 1px dashed var(--auth-line);
+  line-height: 1.55;
+}
+
+.consent-items strong {
+  display: block;
+  font-weight: 600;
+  color: var(--auth-text);
+}
+
+.consent-refusal {
+  padding: 10px 16px 14px;
+  line-height: 1.6;
+  color: var(--auth-faint);
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-page *,
+  .auth-page *::before,
+  .auth-page *::after {
+    transition: none !important;
+  }
+}
+
+/* 휴대폰에서는 카드 테두리를 걷고 화면 전체를 폼으로 쓴다. */
+@media (max-width: 480px) {
+  .auth-page {
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 32px 16px;
+    background: #fff;
+  }
+
+  .auth-form-wrap {
+    padding: 0 4px;
+    border: none;
+    box-shadow: none;
+  }
 }

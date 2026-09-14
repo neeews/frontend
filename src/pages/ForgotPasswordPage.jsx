@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authApi } from '../api/auth'
 import { VERIFY_CODE_DURATION, formatMMSS } from '../utils/time'
+import AuthLogo from '../components/AuthLogo'
 import '../styles/auth.css'
 
 export default function ForgotPasswordPage() {
@@ -75,8 +76,9 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="auth-page">
+      <AuthLogo />
       <div className="auth-form-wrap">
-        <h2>비밀번호 찾기 🔑</h2>
+        <h2>비밀번호 찾기</h2>
         <p className="auth-subtitle">가입한 이메일로 인증 후 비밀번호를 재설정하세요</p>
 
         <form onSubmit={submit}>
@@ -118,14 +120,22 @@ export default function ForgotPasswordPage() {
               <>
                 <p className="verify-sent-msg">인증 코드가 이메일로 발송되었습니다.</p>
                 <div className="verify-code-row">
-                  <input
-                    type="text"
-                    className="code-input"
-                    placeholder="인증 코드 6자리"
-                    value={verifyCode}
-                    onChange={e => setVerifyCode(e.target.value.replace(/\D/g, ''))}
-                    maxLength={6}
-                  />
+                  <div className="code-field">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      className="code-input"
+                      placeholder="인증 코드 6자리"
+                      aria-label="인증 코드"
+                      value={verifyCode}
+                      onChange={e => setVerifyCode(e.target.value.replace(/\D/g, ''))}
+                      maxLength={6}
+                    />
+                    <span className={`verify-timer${timeLeft === 0 ? ' expired' : ''}`}>
+                      {timeLeft > 0 ? formatMMSS(timeLeft) : '만료'}
+                    </span>
+                  </div>
                   <button
                     type="button"
                     className="btn-confirm-code"
@@ -134,9 +144,6 @@ export default function ForgotPasswordPage() {
                   >
                     확인
                   </button>
-                  <span className={`verify-timer${timeLeft === 0 ? ' expired' : ''}`}>
-                    {timeLeft > 0 ? formatMMSS(timeLeft) : '만료'}
-                  </span>
                 </div>
                 {codeError && <p className="auth-error">{codeError}</p>}
               </>
@@ -173,7 +180,7 @@ export default function ForgotPasswordPage() {
             </>
           )}
 
-          {error && <p className="auth-error">{error}</p>}
+          {error && <p className="auth-alert" role="alert">{error}</p>}
 
           {codeVerified && (
             <button
@@ -187,7 +194,7 @@ export default function ForgotPasswordPage() {
         </form>
 
         <p className="auth-switch">
-          <Link to="/login">← 로그인으로 돌아가기</Link>
+          비밀번호가 기억나셨나요?<Link to="/login">로그인</Link>
         </p>
       </div>
     </div>
