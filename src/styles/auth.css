@@ -517,7 +517,66 @@
   font-size: 12px;
 }
 
+/* ── 약관 동의 창 ── */
+.consent-dialog {
+  width: calc(100% - 32px);
+  max-width: 420px;
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  background: #fff;
+  color: var(--auth-ink);
+  box-shadow: 0 24px 64px -12px rgba(15, 23, 42, 0.35);
+  overflow-y: auto;
+  outline: none;
+}
+
+.consent-dialog[open] { animation: consent-in 0.2s ease-out; }
+
+.consent-dialog::backdrop { background: rgba(15, 23, 42, 0.45); }
+
+@keyframes consent-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.consent-dialog-body { padding: 20px 24px 24px; }
+
+.consent-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.consent-dialog-head h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.consent-dialog-close {
+  display: flex;
+  margin-right: -6px;
+  padding: 6px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--auth-faint);
+  cursor: pointer;
+}
+
+.consent-dialog-close:hover:not(:disabled) { color: var(--auth-text); background: #f1f5f9; }
+
+.consent-dialog .consent { margin: 0 0 16px; }
+
+.consent-dialog .btn-submit { margin-top: 0; }
+
 @media (prefers-reduced-motion: reduce) {
+  .consent-dialog[open] { animation: none; }
+
   .auth-page *,
   .auth-page *::before,
   .auth-page *::after {
@@ -539,4 +598,21 @@
     border: none;
     box-shadow: none;
   }
+
+  /* 휴대폰에서는 화면 아래에 붙는 시트로 띄운다. */
+  .consent-dialog {
+    width: 100%;
+    max-width: none;
+    margin: auto 0 0;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .consent-dialog[open] { animation-name: consent-sheet-in; }
+
+  .consent-dialog-body { padding: 20px 16px calc(20px + env(safe-area-inset-bottom)); }
+}
+
+@keyframes consent-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: none; }
 }

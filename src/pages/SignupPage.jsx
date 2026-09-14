@@ -4,8 +4,8 @@ import { authApi } from '../api/auth'
 import { useAuth } from '../context/AuthContext'
 import EyeIcon from '../components/EyeIcon'
 import AuthLogo from '../components/AuthLogo'
+import SignupConsentDialog from '../components/SignupConsentDialog'
 import { VERIFY_CODE_DURATION, formatMMSS } from '../utils/time'
-import { CONSENT_ITEMS } from '../constants/privacy'
 import '../styles/auth.css'
 
 export default function SignupPage() {
@@ -19,20 +19,10 @@ export default function SignupPage() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [error, setError] = useState('')
   const [codeError, setCodeError] = useState('')
-  // 개인정보 보호법 제22조는 필수 동의를 다른 항목과 구분해 따로 받도록 하고 있다.
-  const [agreedPrivacy, setAgreedPrivacy] = useState(false)
-  const [agreedTerms, setAgreedTerms] = useState(false)
-  const [agreedAge, setAgreedAge] = useState(false)
+  const [consentOpen, setConsentOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { login } = useAuth()
-
-  const allAgreed = agreedAge && agreedTerms && agreedPrivacy
-  const toggleAll = checked => {
-    setAgreedAge(checked)
-    setAgreedTerms(checked)
-    setAgreedPrivacy(checked)
-  }
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -82,7 +72,8 @@ export default function SignupPage() {
     }
   }
 
-  const submit = async e => {
+  // 폼 입력이 끝나면 약관 동의 창을 띄우고, 실제 가입은 창에서 동의한 뒤에 한다.
+  const submit = e => {
     e.preventDefault()
     setError('')
     if (!emailVerified) {
@@ -93,16 +84,18 @@ export default function SignupPage() {
       setError('비밀번호가 일치하지 않습니다.')
       return
     }
-    if (!allAgreed) {
-      setError('필수 항목에 모두 동의해주세요.')
-      return
-    }
+    setConsentOpen(true)
+  }
+
+  const signup = async () => {
     setLoading(true)
     try {
       const data = await authApi.signup(form.name, form.email, form.password)
       login(data)
       navigate('/')
     } catch (err) {
+      // 중복 이메일처럼 폼을 고쳐야 하는 오류가 대부분이라 창을 닫고 폼 위에 보여준다.
+      setConsentOpen(false)
       setError(err.message || '회원가입에 실패했습니다. 다시 시도해주세요.')
     } finally {
       setLoading(false)
@@ -249,62 +242,14 @@ export default function SignupPage() {
               </button>
             </div>
           </div>
-          <fieldset className="consent">
-            <legend>약관 동의</legend>
-
-            <label className="consent-all">
-              <input type="checkbox" checked={allAgreed} onChange={e => toggleAll(e.target.checked)} />
-              필수 약관에 모두 동의
-            </label>
-
-            <ul className="consent-list">
-              <li className="consent-row">
-                <label>
-                  <input type="checkbox" checked={agreedAge} onChange={e => setAgreedAge(e.target.checked)} />
-                  <span>만 14세 이상입니다<em>(필수)</em></span>
-                </label>
-              </li>
-              <li className="consent-row">
-                <label>
-                  <input type="checkbox" checked={agreedTerms} onChange={e => setAgreedTerms(e.target.checked)} />
-                  <span>이용약관 동의<em>(필수)</em></span>
-                </label>
-                <Link to="/terms" target="_blank" rel="noreferrer" className="consent-view">보기</Link>
-              </li>
-              <li className="consent-row">
-                <label>
-                  <input type="checkbox" checked={agreedPrivacy} onChange={e => setAgreedPrivacy(e.target.checked)} />
-                  <span>개인정보 수집·이용 동의<em>(필수)</em></span>
-                </label>
-                <Link to="/privacy" target="_blank" rel="noreferrer" className="consent-view">보기</Link>
-              </li>
-            </ul>
-
-            {/* 수집 항목·목적·보유 기간과 거부 권리는 동의 시점에 알려야 해서 화면에 두되, 접어서 보여준다. */}
-            <details className="consent-detail">
-              <summary>수집하는 개인정보와 보유 기간</summary>
-              <ul className="consent-items">
-                {CONSENT_ITEMS.map(row => (
-                  <li key={row.items}>
-                    <strong>{row.items}</strong>
-                    {row.purpose} · {row.period}
-                  </li>
-                ))}
-              </ul>
-              <p className="consent-refusal">
-                동의를 거부하실 수 있으나, 위 항목은 서비스 제공에 반드시 필요한 최소한의 정보이므로
-                거부 시 회원가입이 제한됩니다.
-              </p>
-            </details>
-          </fieldset>
 
           {error && <p className="auth-alert" role="alert">{error}</p>}
           <button
             type="submit"
             className="btn-submit"
-            disabled={!emailVerified || !allAgreed || loading}
+            disabled={!emailVerified || loading}
           >
-            {loading ? '가입 중...' : '회원가입'}
+            회원가입
           </button>
         </form>
 
@@ -312,6 +257,13 @@ export default function SignupPage() {
           이미 계정이 있으신가요?<Link to="/login">로그인</Link>
         </p>
       </div>
+
+      <SignupConsentDialog
+        open={consentOpen}
+        loading={loading}
+        onClose={() => setConsentOpen(false)}
+        onAgree={signup}
+      />
     </div>
   )
 }
